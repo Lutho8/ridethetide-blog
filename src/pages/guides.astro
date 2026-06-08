@@ -1,0 +1,108 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const guides = [
+  {
+    title: 'Peptide Reconstitution: The Math Nobody Teaches You',
+    slug: 'reconstitution-guide',
+    category: 'Research Methods',
+    description: 'Step-by-step guide to reconstituting peptides correctly. BAC water calculations, concentration tables, and common mistakes.',
+    level: 'Beginner',
+    time: '8 min read',
+  },
+  {
+    title: 'Injection Techniques for Peptides',
+    slug: 'injection-techniques',
+    category: 'Research Methods',
+    description: 'Subcutaneous, intramuscular, and intranasal administration. Needle selection, site rotation, and safety protocols.',
+    level: 'Beginner',
+    time: '10 min read',
+  },
+  {
+    title: 'Peptide Storage and Stability',
+    slug: 'storage-stability',
+    category: 'Research Methods',
+    description: 'How to store lyophilized and reconstituted peptides. Temperature, light, and shelf-life considerations.',
+    level: 'Beginner',
+    time: '6 min read',
+  },
+  {
+    title: 'Bloodwork Before, During, and After Peptide Protocols',
+    slug: 'bloodwork-guide',
+    category: 'Safety & Science',
+    description: 'What to test, when to test, and how to interpret results. Complete panel recommendations for SA researchers.',
+    level: 'Intermediate',
+    time: '12 min read',
+  },
+  {
+    title: 'The Healing Stack: BPC-157 + TB-500 Protocol',
+    slug: 'healing-stack',
+    category: 'Protocol Guides',
+    description: 'Complete 6-week protocol for injury recovery. Dosing, timing, cycling, and expected outcomes.',
+    level: 'Intermediate',
+    time: '10 min read',
+  },
+  {
+    title: 'CJC-1295 + Ipamorelin: The Growth Hormone Stack',
+    slug: 'cjc-ipamorelin-stack',
+    category: 'Protocol Guides',
+    description: 'Synergistic GH secretagogue protocol. Dosing schedules, timing, and bloodwork monitoring.',
+    level: 'Intermediate',
+    time: '12 min read',
+  },
+  {
+    title: 'Fat Loss Protocol: Semaglutide, Tirzepatide, and Retatrutide',
+    slug: 'glp1-fat-loss',
+    category: 'Protocol Guides',
+    description: 'GLP-1 receptor agonist comparison and protocol design. Dosing escalation, side effect management, and maintenance.',
+    level: 'Advanced',
+    time: '15 min read',
+  },
+  {
+    title: 'South African Peptide Sourcing Guide',
+    slug: 'sa-sourcing',
+    category: 'South African Context',
+    description: 'Local suppliers, international import, customs considerations, and quality verification for SA researchers.',
+    level: 'Beginner',
+    time: '10 min read',
+  },
+];
+---
+
+<Layout title="Protocol Guides | Ride The Tide Research" description="Step-by-step peptide research guides. Reconstitution, injection, storage, bloodwork, and complete protocols for South African researchers.">
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    <div class="mb-12">
+      <h1 class="text-3xl font-bold text-slate-900 mb-4">Protocol Guides</h1>
+      <p class="text-lg text-slate-600 max-w-3xl">
+        Practical, step-by-step guides for every stage of peptide research. 
+        From your first reconstitution to advanced stacking protocols.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {guides.map(guide => (
+        <article class="article-card">
+          <div class="p-6">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="tag-pill">{guide.category}</span>
+              <span class={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                guide.level === 'Beginner' ? 'bg-green-100 text-green-700' :
+                guide.level === 'Intermediate' ? 'bg-amber-100 text-amber-700' :
+                'bg-red-100 text-red-700'
+              }`}>{guide.level}</span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 mb-2">
+              <a href={`/guides/${guide.slug}`} class="hover:text-teal-600 transition">
+                {guide.title}
+              </a>
+            </h2>
+            <p class="text-sm text-slate-600 mb-4">{guide.description}</p>
+            <div class="flex items-center gap-2 text-xs text-slate-500">
+              <span>{guide.time}</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</Layout>

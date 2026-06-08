@@ -1,0 +1,80 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { PRIORITY_PEPTIDES } from '../consts';
+
+const peptides = PRIORITY_PEPTIDES.map(name => ({
+  name,
+  slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+  category: inferCategory(name),
+  status: 'coming-soon',
+}));
+
+function inferCategory(name) {
+  const healing = ['BPC-157', 'TB-500', 'GHK-Cu'];
+  const weightLoss = ['Semaglutide', 'Tirzepatide', 'Retatrutide', 'AOD-9604'];
+  const longevity = ['Epitalon', 'SS-31', 'Thymosin Alpha-1'];
+  const cognitive = ['Selank', 'Semax', 'DSIP'];
+  const gh = ['CJC-1295', 'Ipamorelin', 'Tesamorelin', 'Sermorelin', 'Hexarelin'];
+  const hormonal = ['PT-141', 'Melanotan II'];
+  
+  if (healing.includes(name)) return 'Healing & Recovery';
+  if (weightLoss.includes(name)) return 'Weight Loss & Metabolic';
+  if (longevity.includes(name)) return 'Longevity & Immune';
+  if (cognitive.includes(name)) return 'Cognitive & Neurological';
+  if (gh.includes(name)) return 'Growth Hormone';
+  if (hormonal.includes(name)) return 'Hormonal & Libido';
+  return 'Research';
+}
+---
+
+<Layout title="Peptide Database | Ride The Tide Research" description="Comprehensive research database of 98+ peptides. Mechanisms, dosing, cycling, and stacking protocols for the South African research community.">
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    <div class="mb-12">
+      <h1 class="text-3xl font-bold text-slate-900 mb-4">Peptide Research Database</h1>
+      <p class="text-lg text-slate-600 max-w-3xl">
+        Evidence-based deep-dives on 98+ peptide compounds. Mechanisms of action, 
+        dosing protocols, cycling strategies, and South African sourcing considerations.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {peptides.map(peptide => (
+        <article class="article-card">
+          <div class="p-6">
+            <div class="flex items-center justify-between mb-3">
+              <span class="tag-pill text-xs">{peptide.category}</span>
+              {peptide.status === 'coming-soon' && (
+                <span class="text-xs text-amber-600 font-medium">Coming Soon</span>
+              )}
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 mb-2">
+              <a href={`/peptides/${peptide.slug}`} class="hover:text-teal-600 transition">
+                {peptide.name}
+              </a>
+            </h2>
+            <p class="text-sm text-slate-600 mb-4">
+              Deep-dive research article covering mechanism, dosing, cycling, and SA context.
+            </p>
+            <div class="flex items-center gap-4 text-xs text-slate-500">
+              <span>Mechanism</span>
+              <span>·</span>
+              <span>Dosing</span>
+              <span>·</span>
+              <span>Stacking</span>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-12 p-6 bg-teal-50 rounded-xl border border-teal-200">
+      <h3 class="font-bold text-slate-900 mb-2">Can't find a peptide?</h3>
+      <p class="text-sm text-slate-600 mb-4">
+        We're building out the full database. Request a peptide deep-dive and we'll prioritize it.
+      </p>
+      <a href="mailto:research@ridethetide.site" class="inline-block rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition">
+        Request a Peptide →
+      </a>
+    </div>
+  </div>
+</Layout>

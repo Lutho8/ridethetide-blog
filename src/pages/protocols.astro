@@ -1,0 +1,100 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const protocols = [
+  {
+    name: '12-Week Fat Loss Protocol',
+    slug: 'fat-loss-protocol',
+    description: 'Complete guided transformation system. Personalized protocol, weekly check-ins, progress tracking, and WhatsApp support.',
+    duration: '12 weeks',
+    compounds: ['CJC-1295', 'Ipamorelin', 'Semaglutide'],
+    price: 'From R12,500',
+    featured: true,
+  },
+  {
+    name: 'Injury Recovery Protocol',
+    slug: 'injury-recovery',
+    description: 'Accelerated healing for tendon, ligament, and muscle injuries. BPC-157 + TB-500 stack with structured rehabilitation.',
+    duration: '6–8 weeks',
+    compounds: ['BPC-157', 'TB-500'],
+    price: 'From R8,500',
+    featured: false,
+  },
+  {
+    name: 'Longevity & Anti-Aging Protocol',
+    slug: 'longevity-protocol',
+    description: 'Comprehensive longevity stack targeting cellular repair, immune function, and metabolic health.',
+    duration: '12 weeks',
+    compounds: ['Epitalon', 'GHK-Cu', 'Thymosin Alpha-1'],
+    price: 'From R15,000',
+    featured: false,
+  },
+  {
+    name: 'Cognitive Enhancement Protocol',
+    slug: 'cognitive-protocol',
+    description: 'Focus, memory, and neuroprotection. Selank + Semax stack with sleep optimization and nootropic support.',
+    duration: '8 weeks',
+    compounds: ['Selank', 'Semax', 'DSIP'],
+    price: 'From R9,500',
+    featured: false,
+  },
+];
+---
+
+<Layout title="Personalized Protocols | Ride The Tide Research" description="Get a personalized peptide protocol designed for your body, goals, and lifestyle. Guided support every step of the way.">
+  <div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+    <div class="mb-12">
+      <h1 class="text-3xl font-bold text-slate-900 mb-4">Personalized Protocols</h1>
+      <p class="text-lg text-slate-600 max-w-3xl">
+        Not sure where to start? Our personalized protocols are designed around 
+        your body, your goals, and your lifestyle — with expert guidance every step of the way.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {protocols.map(protocol => (
+        <article class={`article-card ${protocol.featured ? 'ring-2 ring-teal-500' : ''}`}>
+          <div class="p-6">
+            {protocol.featured && (
+              <span class="inline-block bg-teal-100 text-teal-700 text-xs font-bold px-3 py-1 rounded-full mb-3">
+                Most Popular
+              </span>
+            )}
+            <h2 class="text-xl font-bold text-slate-900 mb-2">{protocol.name}</h2>
+            <p class="text-sm text-slate-600 mb-4">{protocol.description}</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+              {protocol.compounds.map(c => (
+                <span class="tag-pill text-xs">{c}</span>
+              ))}
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-sm text-slate-500">
+                <span>{protocol.duration}</span>
+                <span class="mx-2">·</span>
+                <span class="font-semibold text-slate-900">{protocol.price}</span>
+              </div>
+              <a 
+                href={`https://ridethetide.site/quiz?protocol=${protocol.slug}`}
+                class="rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition"
+              >
+                Get Started →
+              </a>
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-12 text-center">
+      <p class="text-slate-600 mb-4">
+        Not sure which protocol is right for you?
+      </p>
+      <a 
+        href="https://ridethetide.site/quiz"
+        class="inline-block rounded-full bg-slate-900 px-8 py-4 font-bold text-white hover:bg-slate-800 transition"
+      >
+        Take the 2-Minute Assessment →
+      </a>
+    </div>
+  </div>
+</Layout>

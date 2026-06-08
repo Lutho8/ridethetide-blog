@@ -1,0 +1,178 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES, PRIORITY_PEPTIDES } from '../consts';
+
+// Get all blog posts
+const posts = await Astro.glob('./blog/**/*.md');
+const sortedPosts = posts.sort((a, b) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf());
+
+// Get featured posts
+const featuredPosts = sortedPosts.filter(post => post.frontmatter.featured);
+const recentPosts = sortedPosts.slice(0, 6);
+
+// Schema.org for homepage
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": SITE_TITLE,
+  "description": SITE_DESCRIPTION,
+  "url": Astro.site,
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ride The Tide",
+    "url": "https://ridethetide.site",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.ridethetide.site/favicon.svg"
+    }
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "https://blog.ridethetide.site/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+};
+---
+
+<Layout title={SITE_TITLE} description={SITE_DESCRIPTION}>
+	<script type="application/ld+json" slot="head" set:html={JSON.stringify(homeSchema)} />
+
+	<!-- Hero Section -->
+	<section class="bg-slate-900 text-white py-20 lg:py-28">
+		<div class="mx-auto max-w-7xl px-4 lg:px-8">
+			<div class="max-w-3xl">
+				<h1 class="text-4xl lg:text-6xl font-bold tracking-tight mb-6">
+					Peptide Research,<br />
+					<span class="text-teal-400">Built for South Africa</span>
+				</h1>
+				<p class="text-lg lg:text-xl text-slate-300 mb-8 leading-relaxed">
+					Evidence-based protocols, safety-first education, and practical guides 
+					for the South African peptide research community. No hype. No bro-science. 
+					Just clinical evidence you can act on.
+				</p>
+				<div class="flex flex-wrap gap-4">
+					<a href="/blog" class="rounded-full bg-teal-500 px-6 py-3 font-semibold text-slate-900 hover:bg-teal-400 transition">
+						Explore Research
+					</a>
+					<a href="/guides" class="rounded-full border border-slate-600 px-6 py-3 font-semibold hover:border-slate-400 transition">
+						Protocol Guides
+					</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Medical Disclaimer Banner -->
+	<div class="bg-amber-50 border-b border-amber-200">
+		<div class="mx-auto max-w-7xl px-4 py-3 lg:px-8">
+			<p class="text-sm text-amber-800 text-center">
+				<strong>Medical Disclaimer:</strong> All content is for research and educational purposes only. 
+				Peptides are not approved for human use by SAHPRA. Always consult a qualified healthcare professional.
+			</p>
+		</div>
+	</div>
+
+	<!-- Featured Categories -->
+	<section class="py-16">
+		<div class="mx-auto max-w-7xl px-4 lg:px-8">
+			<h2 class="text-2xl font-bold text-slate-900 mb-8">Research Categories</h2>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{CATEGORIES.map(cat => (
+					<a href={`/categories/${cat.id}`} class="group bg-white rounded-xl border border-slate-200 p-6 hover:border-teal-300 hover:shadow-md transition">
+						<h3 class="font-semibold text-slate-900 group-hover:text-teal-600 mb-2">{cat.name}</h3>
+						<p class="text-sm text-slate-600">{cat.description}</p>
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Priority Peptides -->
+	<section class="py-16 bg-white border-y border-slate-200">
+		<div class="mx-auto max-w-7xl px-4 lg:px-8">
+			<div class="flex items-center justify-between mb-8">
+				<h2 class="text-2xl font-bold text-slate-900">Priority Peptides</h2>
+				<a href="/peptides" class="text-sm font-medium text-teal-600 hover:text-teal-700">View all 98+ →</a>
+			</div>
+			<div class="flex flex-wrap gap-3">
+				{PRIORITY_PEPTIDES.map(peptide => (
+					<a href={`/peptides/${peptide.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} class="tag-pill">
+						{peptide}
+					</a>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- Featured Articles -->
+	{featuredPosts.length > 0 && (
+		<section class="py-16">
+			<div class="mx-auto max-w-7xl px-4 lg:px-8">
+				<h2 class="text-2xl font-bold text-slate-900 mb-8">Featured Research</h2>
+				<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+					{featuredPosts.slice(0, 2).map(post => (
+						<article class="article-card">
+							<div class="p-6">
+								<div class="flex items-center gap-2 mb-3">
+									<span class="tag-pill">{post.frontmatter.category}</span>
+									<span class="text-xs text-slate-500">{post.frontmatter.pubDate}</span>
+								</div>
+								<h3 class="text-xl font-bold text-slate-900 mb-2">
+									<a href={post.url} class="hover:text-teal-600 transition">{post.frontmatter.title}</a>
+								</h3>
+								<p class="text-slate-600 text-sm line-clamp-3">{post.frontmatter.description}</p>
+							</div>
+						</article>
+					))}
+				</div>
+			</div>
+		</section>
+	)}
+
+	<!-- Recent Articles -->
+	<section class="py-16 bg-slate-50">
+		<div class="mx-auto max-w-7xl px-4 lg:px-8">
+			<div class="flex items-center justify-between mb-8">
+				<h2 class="text-2xl font-bold text-slate-900">Latest Research</h2>
+				<a href="/blog" class="text-sm font-medium text-teal-600 hover:text-teal-700">View all articles →</a>
+			</div>
+			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+				{recentPosts.map(post => (
+					<article class="article-card">
+						<div class="p-6">
+							<div class="flex items-center gap-2 mb-3">
+								<span class="tag-pill">{post.frontmatter.category}</span>
+							</div>
+							<h3 class="font-bold text-slate-900 mb-2">
+								<a href={post.url} class="hover:text-teal-600 transition">{post.frontmatter.title}</a>
+							</h3>
+							<p class="text-sm text-slate-600 line-clamp-2">{post.frontmatter.description}</p>
+							<div class="mt-4 flex items-center gap-2 text-xs text-slate-500">
+								<span>{post.frontmatter.pubDate}</span>
+								<span>·</span>
+								<span>{post.frontmatter.readingTime || '5 min read'}</span>
+							</div>
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+
+	<!-- CTA Section -->
+	<section class="py-20 bg-teal-900 text-white">
+		<div class="mx-auto max-w-7xl px-4 lg:px-8 text-center">
+			<h2 class="text-3xl font-bold mb-4">Ready to Start Your Protocol?</h2>
+			<p class="text-teal-100 mb-8 max-w-2xl mx-auto">
+				Take our 2-minute assessment and get a personalized peptide protocol designed 
+				specifically for your body, goals, and lifestyle.
+			</p>
+			<a href="https://ridethetide.site/quiz" class="inline-block rounded-full bg-white px-8 py-4 font-bold text-teal-900 hover:bg-teal-50 transition">
+				Get Your Personalized Protocol →
+			</a>
+		</div>
+	</section>
+</Layout>

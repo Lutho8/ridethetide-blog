@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content OS Dashboard — Ride The Tide</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --text-secondary: #64748b;
+      --border: #e2e8f0;
+      --primary: #14b8a6;
+      --primary-dark: #0d9488;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #22c55e;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    .header {
+      background: var(--text);
+      color: white;
+      padding: 1.5rem 2rem;
+      border-bottom: 3px solid var(--primary);
+    }
+    .header h1 { font-size: 1.5rem; font-weight: 700; }
+    .header p { color: #94a3b8; font-size: 0.875rem; margin-top: 0.25rem; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 2rem; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .card {
+      background: var(--card);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .card-title { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); }
+    .card-value { font-size: 2rem; font-weight: 700; color: var(--text); }
+    .card-delta { font-size: 0.875rem; margin-top: 0.25rem; }
+    .delta-up { color: var(--success); }
+    .delta-down { color: var(--danger); }
+    .delta-neutral { color: var(--text-secondary); }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .status-ok { background: #dcfce7; color: #166534; }
+    .status-warn { background: #fef3c7; color: #92400e; }
+    .status-error { background: #fee2e2; color: #991b1b; }
+    .status-pending { background: #e0e7ff; color: #3730a3; }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: #f8fafc; font-weight: 600; color: var(--text-secondary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    tr:hover { background: #f8fafc; }
+    .priority-p0 { color: var(--danger); font-weight: 600; }
+    .priority-p1 { color: var(--warning); font-weight: 600; }
+    .priority-p2 { color: var(--text-secondary); }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-secondary { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--border); }
+    .actions { display: flex; gap: 0.75rem; margin-bottom: 2rem; flex-wrap: wrap; }
+    .log-output {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 0.75rem;
+      line-height: 1.5;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    .mcp-status {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .mcp-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--bg);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+    .mcp-name { font-weight: 600; font-size: 0.875rem; }
+    .mcp-type { font-size: 0.75rem; color: var(--text-secondary); }
+    .footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+    @media (max-width: 768px) {
+      .container { padding: 1rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <h1>🌊 Content OS Dashboard</h1>
+    <p>Ride The Tide — AI-Native Content Operations</p>
+  </header>
+
+  <div class="container">
+    <!-- KPI Cards -->
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Articles Published</span>
+          <span class="status-badge status-pending">Setup</span>
+        </div>
+        <div class="card-value" id="article-count">0</div>
+        <div class="card-delta delta-neutral">Target: 50 for topical authority</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Content Audit</span>
+          <span class="status-badge status-pending">Pending MCP</span>
+        </div>
+        <div class="card-value" id="audit-status">—</div>
+        <div class="card-delta delta-neutral">Last run: Never</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">AI Search Visibility</span>
+          <span class="status-badge status-pending">Pending MCP</span>
+        </div>
+        <div class="card-value" id="ai-visibility">—</div>
+        <div class="card-delta delta-neutral">Brand Radar not connected</div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Priority Actions</span>
+          <span class="status-badge status-warn">6 pending</span>
+        </div>
+        <div class="card-value" id="priority-count">6</div>
+        <div class="card-delta delta-down">1 P0 critical</div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <h2 class="section-title">⚡ Quick Actions</h2>
+    <div class="actions">
+      <button class="btn btn-primary" onclick="runPipeline('content:audit')">🔍 Run Content Audit</button>
+      <button class="btn btn-primary" onclick="runPipeline('content:gap')">🔎 Gap Analysis</button>
+      <button class="btn btn-primary" onclick="runPipeline('embeddings:build')">🔢 Build Embeddings</button>
+      <button class="btn btn-secondary" onclick="runPipeline('content:refresh')">🔄 Refresh Articles</button>
+      <button class="btn btn-secondary" onclick="runPipeline('pipeline:full')">🚀 Full Pipeline</button>
+    </div>
+
+    <!-- Pipeline Output -->
+    <div class="card" id="pipeline-output-card" style="display: none;">
+      <div class="card-header">
+        <span class="card-title">Pipeline Output</span>
+        <span class="status-badge status-pending" id="pipeline-status">Running...</span>
+      </div>
+      <div class="log-output" id="pipeline-log">Waiting for command...</div>
+    </div>
+
+    <!-- MCP Status -->
+    <h2 class="section-title">🔌 MCP Connector Status</h2>
+    <div class="card">
+      <div class="mcp-status" id="mcp-status">
+        <div class="mcp-item">
+          <div>
+            <div class="mcp-name">Ahrefs</div>
+            <div class="mcp-type">SEO Data, Rankings, Backlinks</div>
+          </div>
+          <span class="status-badge status-pending">Not Connected</span>
+        </div>
+        <div class="mcp-item">
+          <div>
+            <div class="mcp-name">Google Search Console</div>
+            <div class="mcp-type">Traffic, Indexing, Decay</div>
+          </div>
+          <span class="status-badge status-pending">Not Connected</span>
+        </div>
+        <div class="mcp-item">
+          <div>
+            <div class="mcp-name">Gong</div>
+            <div class="mcp-type">Sales Call Transcripts</div>
+          </div>
+          <span class="status-badge status-pending">Not Connected</span>
+        </div>
+        <div class="mcp-item">
+          <div>
+            <div class="mcp-name">Intercom</div>
+            <div class="mcp-type">Support Conversations</div>
+          </div>
+          <span class="status-badge status-pending">Not Connected</span>
+        </div>
+        <div class="mcp-item">
+          <div>
+            <div class="mcp-name">Slack</div>
+            <div class="mcp-type">Team Feedback</div>
+          </div>
+          <span class="status-badge status-pending">Not Connected</span>
+        </div>
+        <div class="mcp-item">
+          <div>
+            <div class="mcp-name">Brand Radar</div>
+            <div class="mcp-type">AI Search Visibility</div>
+          </div>
+          <span class="status-badge status-pending">Not Connected</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Priority Actions -->
+    <h2 class="section-title">🎯 Priority Actions</h2>
+    <div class="card">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Priority</th>
+              <th>Action</th>
+              <th>Impact</th>
+              <th>Owner</th>
+              <th>Due</th>
+            </tr>
+          </thead>
+          <tbody id="priority-table">
+            <tr>
+              <td class="priority-p0">P0-Critical</td>
+              <td>Connect all MCP servers (Ahrefs, GSC, Brand Radar)</td>
+              <td>Unblocks all automated audits</td>
+              <td>DevOps</td>
+              <td>2026-06-15</td>
+            </tr>
+            <tr>
+              <td class="priority-p1">P1-High</td>
+              <td>Build initial 20 peptide deep-dive articles</td>
+              <td>Foundation for ranking</td>
+              <td>Content</td>
+              <td>2026-07-15</td>
+            </tr>
+            <tr>
+              <td class="priority-p1">P1-High</td>
+              <td>Set up GSC property for blog.ridethetide.site</td>
+              <td>Enables traffic monitoring</td>
+              <td>SEO</td>
+              <td>2026-06-10</td>
+            </tr>
+            <tr>
+              <td class="priority-p2">P2-Medium</td>
+              <td>Implement FAQ schema on all peptide pages</td>
+              <td>Improves AI search visibility</td>
+              <td>Dev</td>
+              <td>2026-06-20</td>
+            </tr>
+            <tr>
+              <td class="priority-p2">P2-Medium</td>
+              <td>Set up internal linking via embeddings</td>
+              <td>Improves topical authority</td>
+              <td>Content</td>
+              <td>2026-06-25</td>
+            </tr>
+            <tr>
+              <td class="priority-p3">P3-Low</td>
+              <td>Configure Cloudflare Pages custom domain</td>
+              <td>Brand consistency</td>
+              <td>DevOps</td>
+              <td>2026-06-12</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Recent Reports -->
+    <h2 class="section-title">📊 Recent Reports</h2>
+    <div class="card">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Report</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reports-table">
+            <tr>
+              <td>Content Audit</td>
+              <td>—</td>
+              <td><span class="status-badge status-pending">Not Run</span></td>
+              <td><button class="btn btn-secondary" onclick="runPipeline('content:audit')">Run Now</button></td>
+            </tr>
+            <tr>
+              <td>Gap Analysis</td>
+              <td>—</td>
+              <td><span class="status-badge status-pending">Not Run</span></td>
+              <td><button class="btn btn-secondary" onclick="runPipeline('content:gap')">Run Now</button></td>
+            </tr>
+            <tr>
+              <td>Embeddings</td>
+              <td>—</td>
+              <td><span class="status-badge status-pending">Not Run</span></td>
+              <td><button class="btn btn-secondary" onclick="runPipeline('embeddings:build')">Run Now</button></td>
+            </tr>
+            <tr>
+              <td>Topic Drift</td>
+              <td>—</td>
+              <td><span class="status-badge status-pending">Not Run</span></td>
+              <td><button class="btn btn-secondary" onclick="runPipeline('embeddings:drift')">Run Now</button></td>
+            </tr>
+            <tr>
+              <td>Firehose Digest</td>
+              <td>—</td>
+              <td><span class="status-badge status-pending">Not Run</span></td>
+              <td><button class="btn btn-secondary" onclick="runPipeline('firehose')">Run Now</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Content Pipeline -->
+    <h2 class="section-title">🔄 Content Pipeline</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Daily Refresh</span>
+          <span class="status-badge status-pending">Not Scheduled</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Automatically refresh top-priority articles using AI Content Helper.
+          Saves drafts for human review.
+        </p>
+        <button class="btn btn-primary" onclick="runPipeline('content:refresh')">Run Refresh Now</button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Weekly Audit</span>
+          <span class="status-badge status-pending">Not Scheduled</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Pull rankings, backlinks, traffic data. Flag decay. Generate priority action list.
+        </p>
+        <button class="btn btn-primary" onclick="runPipeline('content:audit')">Run Audit Now</button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Weekly Gap Analysis</span>
+          <span class="status-badge status-pending">Not Scheduled</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Find competitor topics we haven't covered. Generate seed keywords for new content.
+        </p>
+        <button class="btn btn-primary" onclick="runPipeline('content:gap')">Run Gap Analysis</button>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Monthly Embeddings</span>
+          <span class="status-badge status-pending">Not Scheduled</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Rebuild vector embeddings. Detect topic drift. Update internal linking suggestions.
+        </p>
+        <button class="btn btn-primary" onclick="runPipeline('embeddings:build')">Build Embeddings</button>
+      </div>
+    </div>
+
+    <!-- Source of Truth -->
+    <h2 class="section-title">📚 Source of Truth</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Product Features</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Master list of product features, use cases, and target audiences.
+        </p>
+        <a href="../config/source-of-truth.md" class="btn btn-secondary" target="_blank">View Document</a>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Writing Voice</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Canonical voice attributes, reference articles, prohibited phrases.
+        </p>
+        <a href="../config/source-of-truth.md#2-canonical-writing-voice" class="btn btn-secondary" target="_blank">View Document</a>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">Strategic Priorities</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Q2–Q3 priorities, KPIs, content pillars, audience personas.
+        </p>
+        <a href="../config/source-of-truth.md#3-strategic-priorities-2026-q2q3" class="btn btn-secondary" target="_blank">View Document</a>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">MCP Connectors</span>
+        </div>
+        <p style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 1rem;">
+          Configuration for Ahrefs, GSC, Gong, Intercom, Slack, Brand Radar.
+        </p>
+        <a href="../config/mcp-connectors.md" class="btn btn-secondary" target="_blank">View Document</a>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Content OS v1.0 — Ride The Tide Research</p>
+      <p style="margin-top: 0.5rem; font-size: 0.75rem;">
+        Built with Astro + Cloudflare Pages | AI-Native Content Operations
+      </p>
+    </footer>
+  </div>
+
+  <script>
+    // Dashboard state
+    const state = {
+      articles: 0,
+      lastAudit: null,
+      mcpStatus: {
+        ahrefs: 'pending',
+        gsc: 'pending',
+        gong: 'pending',
+        intercom: 'pending',
+        slack: 'pending',
+        brandradar: 'pending',
+      },
+    };
+
+    // Simulate pipeline runs (in production, these would call the actual scripts)
+    async function runPipeline(command) {
+      const card = document.getElementById('pipeline-output-card');
+      const log = document.getElementById('pipeline-log');
+      const status = document.getElementById('pipeline-status');
+      
+      card.style.display = 'block';
+      status.textContent = 'Running...';
+      status.className = 'status-badge status-warn';
+      log.textContent = `$ npm run ${command}\n`;
+      
+      // Simulate output
+      const steps = {
+        'content:audit': [
+          '🔍 Starting Content Audit Pipeline...',
+          '   Ahrefs Project: ridethetide-site',
+          '   GSC Site: https://blog.ridethetide.site/',
+          '   Decay Threshold: -20%',
+          '📊 [1/5] Ahrefs Rankings & Backlinks',
+          '   ⚠️  Ahrefs MCP not connected — see config/mcp-connectors.md',
+          '🤖 [2/5] AI Search Visibility (Brand Radar)',
+          '   ⚠️  Brand Radar MCP not connected — see config/mcp-connectors.md',
+          '🔧 [3/5] Technical SEO Audit',
+          '   ⚠️  Site Audit MCP not connected — see config/mcp-connectors.md',
+          '📉 [4/5] GSC Traffic Decay Detection',
+          '   ⚠️  GSC MCP not connected — see config/mcp-connectors.md',
+          '🎯 [5/5] Generating Priority Action List',
+          '✅ Content Audit Complete!',
+          '   JSON: content-os/audits/content-audit-2026-06-08.json',
+          '   Markdown: content-os/audits/content-audit-2026-06-08.md',
+        ],
+        'content:gap': [
+          '🔍 Content Gap Analysis',
+          '   Our domain: blog.ridethetide.site',
+          '   Competitors: peptide-sciences.com, science.bio, cosmicnootropic.com',
+          '✅ Gap Analysis Complete!',
+          '   Report: content-os/reports/gap-analysis-2026-06-08.json',
+          '   Seeds: content-os/seeds/seed-keywords-2026-06-08.md',
+          '   Opportunities found: 8',
+          '   P0 (Critical): 2',
+          '   P1 (High): 3',
+          '   P2 (Medium): 3',
+        ],
+        'embeddings:build': [
+          '🔢 Building Vector Embeddings',
+          '   Content dir: src/content/blog',
+          '   Articles indexed: 0',
+          '   ⚠️  No articles found. Create content in src/content/blog/ first.',
+          '✅ Embeddings Built!',
+        ],
+        'content:refresh': [
+          '🔄 Article Refresh Pipeline',
+          '   Mode: DRY RUN',
+          '   Max articles: 3',
+          '   ⚠️  No priority queue found. Build from content audit first.',
+          '✅ Refresh complete!',
+        ],
+        'pipeline:full': [
+          '🚀 Running Full Pipeline...',
+          '=== Content Audit ===',
+          '...',
+          '=== Gap Analysis ===',
+          '...',
+          '=== Embeddings ===',
+          '...',
+          '✅ Full pipeline complete!',
+        ],
+        'firehose': [
+          '📰 Generating Firehose Digest',
+          '   Email to: lutho@ridethetide.site',
+          '   Feeds: 3',
+          '   Competitors: 3',
+          '✅ Firehose Digest Generated!',
+          '   JSON: content-os/reports/firehose-digest-2026-06-08.json',
+          '   Email (MD): content-os/reports/firehose-digest-2026-06-08.md',
+        ],
+      };
+      
+      const output = steps[command] || ['Running...', 'Done.'];
+      
+      for (const line of output) {
+        await new Promise(r => setTimeout(r, 300));
+        log.textContent += line + '\n';
+        log.scrollTop = log.scrollHeight;
+      }
+      
+      status.textContent = 'Complete';
+      status.className = 'status-badge status-ok';
+    }
+
+    // Load initial state
+    async function loadState() {
+      try {
+        // In production, this would fetch from the server/API
+        // For now, just set static values
+        document.getElementById('article-count').textContent = '0';
+      } catch (e) {
+        console.error('Failed to load state:', e);
+      }
+    }
+
+    loadState();
+  </script>
+</body>
+</html>

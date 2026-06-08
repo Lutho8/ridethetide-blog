@@ -1,0 +1,32 @@
+{
+  "name": "ridethetide-blog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "content:seed": "node scripts/seed-topics.js",
+    "content:audit": "node scripts/content-audit.js",
+    "content:refresh": "node scripts/refresh-articles.js",
+    "content:gap": "node scripts/gap-analysis.js",
+    "embeddings:build": "node scripts/build-embeddings.js",
+    "embeddings:drift": "node scripts/topic-drift.js",
+    "os:serve": "node scripts/dashboard-server.js",
+    "pipeline:full": "npm run content:audit && npm run content:gap && npm run embeddings:drift"
+  },
+  "dependencies": {
+    "astro": "^4.0.0",
+    "@astrojs/mdx": "^2.0.0",
+    "@astrojs/rss": "^4.0.0",
+    "@astrojs/sitemap": "^3.0.0",
+    "@astrojs/tailwind": "^5.0.0",
+    "tailwindcss": "^3.4.0",
+    "sharp": "^0.33.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.10"
+  }
+}

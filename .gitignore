@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+*.log
+
+# Content OS generated files (keep structure, ignore data)
+content-os/drafts/*.md
+content-os/drafts/briefs/*.md
+content-os/embeddings/*.json
+content-os/reports/*.json
+content-os/reports/*.md
+content-os/reports/*.html
+content-os/audits/*.json
+content-os/audits/*.md
+content-os/seeds/*.json
+content-os/seeds/*.md
+
+# Keep .gitkeep for directory structure
+!content-os/drafts/.gitkeep
+!content-os/drafts/briefs/.gitkeep
+!content-os/embeddings/.gitkeep
+!content-os/reports/.gitkeep
+!content-os/audits/.gitkeep
+!content-os/seeds/.gitkeep

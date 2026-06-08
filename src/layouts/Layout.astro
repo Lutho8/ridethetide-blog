@@ -1,0 +1,114 @@
+---
+import '../styles/global.css';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+interface Props {
+	title?: string;
+	description?: string;
+	image?: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const { title = SITE_TITLE, description = SITE_DESCRIPTION, image = '/images/og-default.jpg' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+
+		<!-- Canonical URL -->
+		<link rel="canonical" href={canonicalURL} />
+
+		<!-- Primary Meta Tags -->
+		<title>{title}</title>
+		<meta name="title" content={title} />
+		<meta name="description" content={description} />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content={canonicalURL} />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:image" content={new URL(image, Astro.site)} />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary_large_image" />
+		<meta property="twitter:url" content={canonicalURL} />
+		<meta property="twitter:title" content={title} />
+		<meta property="twitter:description" content={description} />
+		<meta property="twitter:image" content={new URL(image, Astro.site)} />
+
+		<!-- AI Search Visibility -->
+		<meta name="ai-purpose" content="educational, research, health-information" />
+		<meta name="ai-disclaimer" content="This content is for research and educational purposes only. Not medical advice." />
+
+		<!-- Schema.org JSON-LD injected by pages -->
+		<slot name="head" />
+	</head>
+	<body class="bg-slate-50 text-slate-900 antialiased">
+		<header class="border-b border-slate-200 bg-white">
+			<nav class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
+				<a href="/" class="text-xl font-bold tracking-tight text-slate-900">
+					Ride The Tide <span class="text-teal-600">Research</span>
+				</a>
+				<div class="hidden md:flex items-center gap-8 text-sm font-medium">
+					<a href="/blog" class="text-slate-600 hover:text-teal-600 transition">Blog</a>
+					<a href="/peptides" class="text-slate-600 hover:text-teal-600 transition">Peptides</a>
+					<a href="/guides" class="text-slate-600 hover:text-teal-600 transition">Guides</a>
+					<a href="/protocols" class="text-slate-600 hover:text-teal-600 transition">Protocols</a>
+					<a href="/about" class="text-slate-600 hover:text-teal-600 transition">About</a>
+				</div>
+				<a href="https://ridethetide.site/quiz" class="rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition">
+					Get Your Protocol
+				</a>
+			</nav>
+		</header>
+
+		<main class="min-h-screen">
+			<slot />
+		</main>
+
+		<footer class="border-t border-slate-200 bg-white mt-20">
+			<div class="mx-auto max-w-7xl px-4 py-12 lg:px-8">
+				<div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+					<div>
+						<h3 class="font-bold text-slate-900 mb-4">Ride The Tide</h3>
+						<p class="text-sm text-slate-600">South Africa's peptide research community. Evidence-based protocols, safety-first education.</p>
+					</div>
+					<div>
+						<h4 class="font-semibold text-slate-900 mb-4">Research</h4>
+						<ul class="space-y-2 text-sm text-slate-600">
+							<li><a href="/peptides" class="hover:text-teal-600">Peptide Database</a></li>
+							<li><a href="/guides" class="hover:text-teal-600">Protocol Guides</a></li>
+							<li><a href="/blog" class="hover:text-teal-600">Research Blog</a></li>
+						</ul>
+					</div>
+					<div>
+						<h4 class="font-semibold text-slate-900 mb-4">Services</h4>
+						<ul class="space-y-2 text-sm text-slate-600">
+							<li><a href="https://ridethetide.site/quiz" class="hover:text-teal-600">Personalized Protocol</a></li>
+							<li><a href="https://ridethetide.site/coaching" class="hover:text-teal-600">1:1 Coaching</a></li>
+							<li><a href="https://www.ridethetide.info/" class="hover:text-teal-600">Protocol Tracker</a></li>
+						</ul>
+					</div>
+					<div>
+						<h4 class="font-semibold text-slate-900 mb-4">Legal</h4>
+						<ul class="space-y-2 text-sm text-slate-600">
+							<li><a href="/disclaimer" class="hover:text-teal-600">Medical Disclaimer</a></li>
+							<li><a href="/privacy" class="hover:text-teal-600">Privacy Policy</a></li>
+							<li><a href="/terms" class="hover:text-teal-600">Terms of Use</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="mt-8 pt-8 border-t border-slate-200 text-sm text-slate-500">
+					<p>© 2026 Ride The Tide. All content is for research and educational purposes only. Not medical advice. Consult a healthcare professional before using any peptide compounds.</p>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>

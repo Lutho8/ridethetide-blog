@@ -1,0 +1,163 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+export async function getStaticPaths() {
+  const posts = await Astro.glob('../blog/**/*.md');
+  return posts.map(post => ({
+    params: { slug: post.file.split('/').pop().replace('.md', '') },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = post;
+
+// Schema.org Article
+const articleSchema = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": post.frontmatter.title,
+  "description": post.frontmatter.description,
+  "image": post.frontmatter.heroImage ? `https://blog.ridethetide.site${post.frontmatter.heroImage}` : undefined,
+  "datePublished": post.frontmatter.pubDate,
+  "dateModified": post.frontmatter.updatedDate || post.frontmatter.pubDate,
+  "author": {
+    "@type": "Organization",
+    "name": "Ride The Tide Research Team",
+    "url": "https://ridethetide.site"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Ride The Tide",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://blog.ridethetide.site/favicon.svg"
+    }
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": Astro.url
+  },
+  "articleSection": post.frontmatter.category,
+  "keywords": post.frontmatter.tags?.join(', '),
+  "speakable": {
+    "@type": "SpeakableSpecification",
+    "cssSelector": [".prose h1", ".prose h2", ".prose p"]
+  }
+};
+
+// FAQ Schema if post has FAQs
+const faqSchema = post.frontmatter.faqs ? {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": post.frontmatter.faqs.map(faq => ({
+    "@type": "Question",
+    "name": faq.question,
+    "acceptedAnswer": {
+      "@type": "Answer",
+      "text": faq.answer
+    }
+  }))
+} : null;
+
+// Medical entity schema
+const medicalSchema = {
+  "@context": "https://schema.org",
+  "@type": "MedicalWebPage",
+  "medicalAudience": {
+    "@type": "MedicalAudience",
+    "audienceType": "Researcher"
+  },
+  "lastReviewed": post.frontmatter.updatedDate || post.frontmatter.pubDate,
+  "reviewedBy": {
+    "@type": "Organization",
+    "name": "Ride The Tide Research Team"
+  }
+};
+---
+
+<Layout 
+  title={`${post.frontmatter.title} | Ride The Tide Research`}
+  description={post.frontmatter.description}
+  image={post.frontmatter.heroImage}
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(articleSchema)} />
+  {faqSchema && <script type="application/ld+json" slot="head" set:html={JSON.stringify(faqSchema)} />}
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(medicalSchema)} />
+
+  <article class="mx-auto max-w-4xl px-4 py-12 lg:px-8">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <a href="/">Home</a>
+      <span>/</span>
+      <a href={`/categories/${post.frontmatter.categoryId}`}>{post.frontmatter.category}</a>
+      <span>/</span>
+      <span class="text-slate-900">{post.frontmatter.title}</span>
+    </nav>
+
+    <!-- Article Header -->
+    <header class="mb-10">
+      <div class="flex items-center gap-3 mb-4">
+        <span class="tag-pill">{post.frontmatter.category}</span>
+        {post.frontmatter.peptides?.map(p => (
+          <span class="tag-pill bg-teal-50 text-teal-700">{p}</span>
+        ))}
+      </div>
+      <h1 class="text-3xl lg:text-5xl font-bold tracking-tight text-slate-900 mb-4">
+        {post.frontmatter.title}
+      </h1>
+      <p class="text-lg text-slate-600 mb-6">{post.frontmatter.description}</p>
+      <div class="flex items-center gap-4 text-sm text-slate-500">
+        <time datetime={post.frontmatter.pubDate}>{post.frontmatter.pubDate}</time>
+        {post.frontmatter.updatedDate && (
+          <span>Updated: <time datetime={post.frontmatter.updatedDate}>{post.frontmatter.updatedDate}</time></span>
+        )}
+        <span>·</span>
+        <span>{post.frontmatter.readingTime || '5 min read'}</span>
+      </div>
+    </header>
+
+    <!-- Medical Disclaimer -->
+    <div class="disclaimer-box">
+      <strong>⚠️ Medical Disclaimer:</strong> This article is for <strong>research and educational purposes only</strong>. 
+      Peptide compounds are not approved for human use by SAHPRA or the FDA. Always consult a qualified 
+      healthcare professional before using any peptide. Individual results may vary. 
+      <a href="/disclaimer" class="underline">Read full disclaimer →</a>
+    </div>
+
+    <!-- Article Content -->
+    <div class="prose max-w-none">
+      <Content />
+    </div>
+
+    <!-- Article Footer -->
+    <footer class="mt-12 pt-8 border-t border-slate-200">
+      <div class="flex flex-wrap gap-2 mb-6">
+        {post.frontmatter.tags?.map(tag => (
+          <a href={`/tags/${tag.toLowerCase().replace(/\s+/g, '-')}`} class="tag-pill">{tag}</a>
+        ))}
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-box">
+        <h3 class="font-bold text-slate-900 mb-2">Want a personalized protocol?</h3>
+        <p class="text-slate-600 text-sm mb-4">
+          This guide is a starting point. For a protocol tailored to your body, goals, and lifestyle, 
+          take our 2-minute assessment.
+        </p>
+        <a href="https://ridethetide.site/quiz" class="inline-block rounded-full bg-teal-600 px-6 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition">
+          Get Your Protocol →
+        </a>
+      </div>
+
+      <!-- Related Articles (placeholder for internal linking) -->
+      <div class="mt-8">
+        <h3 class="font-bold text-slate-900 mb-4">Related Research</h3>
+        <div id="related-articles" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated by embeddings-based internal linking script -->
+          <p class="text-sm text-slate-500 italic">Related articles loaded via topical authority engine.</p>
+        </div>
+      </div>
+    </footer>
+  </article>
+</Layout>
