@@ -101,7 +101,7 @@ See [`config/mcp-connectors.md`](config/mcp-connectors.md) for full setup.
 2. Fill in your API keys
 3. Install MCP servers: `npm install -g @ahrefs/mcp-server ...`
 4. Add MCP config to your IDE (Claude Desktop, Cursor, VS Code)
-5. Test: `node scripts/test-mcp-connections.js`
+5. Test: `node scripts/test-mcp-connections.cjs`
 
 ## 📚 Source of Truth
 
@@ -129,34 +129,34 @@ See `config/source-of-truth.md` for full voice guidelines.
 
 ```bash
 # Refresh highest priority articles
-0 6 * * * cd /path/to/ridethetide-blog && node scripts/refresh-articles.js --top 3
+0 6 * * * cd /path/to/ridethetide-blog && node scripts/refresh-articles.cjs --top 3
 
 # Generate firehose digest
-0 7 * * * cd /path/to/ridethetide-blog && node scripts/firehose-digest.js --email lutho@ridethetide.site
+0 7 * * * cd /path/to/ridethetide-blog && node scripts/firehose-digest.cjs --email lutho@ridethetide.site
 ```
 
 ### Weekly (Cron)
 
 ```bash
 # Content audit
-0 8 * * 1 cd /path/to/ridethetide-blog && node scripts/content-audit.js
+0 8 * * 1 cd /path/to/ridethetide-blog && node scripts/content-audit.cjs
 
 # Gap analysis
-0 9 * * 1 cd /path/to/ridethetide-blog && node scripts/gap-analysis.js
+0 9 * * 1 cd /path/to/ridethetide-blog && node scripts/gap-analysis.cjs
 
 # Extract customer language
-0 10 * * 1 cd /path/to/ridethetide-blog && node scripts/extract-language.js --source gong --days 7
-0 10 * * 1 cd /path/to/ridethetide-blog && node scripts/extract-language.js --source intercom --days 7
+0 10 * * 1 cd /path/to/ridethetide-blog && node scripts/extract-language.cjs --source gong --days 7
+0 10 * * 1 cd /path/to/ridethetide-blog && node scripts/extract-language.cjs --source intercom --days 7
 ```
 
 ### Monthly (Cron)
 
 ```bash
 # Rebuild embeddings
-0 6 1 * * cd /path/to/ridethetide-blog && node scripts/build-embeddings.js
+0 6 1 * * cd /path/to/ridethetide-blog && node scripts/build-embeddings.cjs
 
 # Detect topic drift
-0 7 1 * * cd /path/to/ridethetide-blog && node scripts/topic-drift.js
+0 7 1 * * cd /path/to/ridethetide-blog && node scripts/topic-drift.cjs
 ```
 
 ## 🌐 Deployment
@@ -201,7 +201,7 @@ Add to `Layout.astro`:
 
 ## 📊 Content OS Dashboard
 
-The dashboard is a single HTML file served by `scripts/dashboard-server.js`.
+The dashboard is a single HTML file served by `scripts/dashboard-server.cjs`.
 
 Features:
 - Real-time KPI cards
