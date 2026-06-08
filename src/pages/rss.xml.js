@@ -1,12 +1,9 @@
----
 import rss from '@astrojs/rss';
 import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
 
 export async function GET(context) {
-  const posts = await context.site
-    ? Object.values(await import.meta.glob('./blog/**/*.md', { eager: true }))
-    : [];
-    
+  const posts = Object.values(await import.meta.glob('./blog/**/*.md', { eager: true }));
+  
   return rss({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,

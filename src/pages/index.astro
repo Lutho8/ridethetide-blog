@@ -3,7 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, CATEGORIES, PRIORITY_PEPTIDES } from '../consts';
 
 // Get all blog posts
-const posts = await Astro.glob('./blog/**/*.md');
+const posts = await Astro.glob('../content/blog/**/*.md');
 const sortedPosts = posts.sort((a, b) => new Date(b.frontmatter.pubDate).valueOf() - new Date(a.frontmatter.pubDate).valueOf());
 
 // Get featured posts
