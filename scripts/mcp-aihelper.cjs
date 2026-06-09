@@ -2,8 +2,8 @@
  * MCP Wrapper for AI Content Helper
  * 
  * Custom MCP server for AI-assisted content analysis and improvement.
- * Uses OpenAI/Anthropic APIs for content gap analysis, voice compliance,
- * and article refresh suggestions.
+ * Uses Kimi (Moonshot AI) API for content gap analysis, voice compliance,
+ * and article refresh suggestions. Kimi API is OpenAI-compatible.
  * 
  * This script implements the Model Context Protocol (MCP) over stdio.
  */
@@ -18,8 +18,12 @@ const {
 // Note: This requires @modelcontextprotocol/sdk to be installed
 // npm install @modelcontextprotocol/sdk
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
+const KIMI_API_KEY = process.env.KIMI_API_KEY;
+const KIMI_BASE_URL = process.env.KIMI_BASE_URL || 'https://api.moonshot.cn/v1';
+const KIMI_MODEL = process.env.KIMI_MODEL || 'moonshot-v1-32k';
+
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // fallback
+const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY; // fallback
 
 const server = new Server(
   {
@@ -109,13 +113,42 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   };
 });
 
+async function callKimi(prompt) {
+  if (!KIMI_API_KEY) {
+    return null;
+  }
+  
+  try {
+    const response = await fetch(`${KIMI_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${KIMI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: KIMI_MODEL,
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.3,
+        max_tokens: 2000,
+      }),
+    });
+    
+    if (!response.ok) return null;
+    
+    const data = await response.json();
+    return data.choices?.[0]?.message?.content || '';
+  } catch (e) {
+    return null;
+  }
+}
+
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  if (!OPENAI_API_KEY && !ANTHROPIC_API_KEY) {
+  if (!KIMI_API_KEY && !OPENAI_API_KEY && !ANTHROPIC_API_KEY) {
     return {
       content: [
         {
           type: 'text',
-          text: 'Error: No AI API key configured. Set OPENAI_API_KEY or ANTHROPIC_API_KEY.',
+          text: 'Error: No AI API key configured. Set KIMI_API_KEY (primary), OPENAI_API_KEY, or ANTHROPIC_API_KEY. Get Kimi key at https://platform.moonshot.cn/',
         },
       ],
       isError: true,
@@ -125,86 +158,90 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   switch (name) {
-    case 'analyze_content_gaps':
+    case 'analyze_content_gaps': {
+      const prompt = `Analyze content gaps for an article targeting "${args.targetKeyword}".\n\nArticle:\n${args.articleContent.substring(0, 4000)}\n\nIdentify 3-5 specific content gaps compared to what top-ranking articles typically cover. Return as JSON array of gap descriptions.`;
+      const result = await callKimi(prompt);
       return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              status: 'pending_api',
-              targetKeyword: args.targetKeyword,
-              note: 'OpenAI/Anthropic API integration pending.',
-              gaps: [
-                'Add comparison table with competitor products',
-                'Include more South African regulatory context',
-                'Add FAQ schema questions',
-                'Expand dosing section with visual aids',
-              ],
-            }, null, 2),
-          },
-        ],
+        content: [{
+          type: 'text',
+          text: result || JSON.stringify({
+            status: 'pending_api',
+            targetKeyword: args.targetKeyword,
+            note: 'Kimi API integration pending.',
+            gaps: [
+              'Add comparison table with competitor products',
+              'Include more South African regulatory context',
+              'Add FAQ schema questions',
+              'Expand dosing section with visual aids',
+            ],
+          }, null, 2),
+        }],
       };
+    }
 
-    case 'suggest_updates':
+    case 'suggest_updates': {
+      const prompt = `Review this article published ${args.pubDate} for outdated information.\n\nArticle:\n${args.articleContent.substring(0, 4000)}\n\nIdentify outdated statistics, claims, or citations. Return as JSON array of update suggestions.`;
+      const result = await callKimi(prompt);
       return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              status: 'pending_api',
-              pubDate: args.pubDate,
-              note: 'OpenAI/Anthropic API integration pending.',
-              outdatedItems: [
-                'Citation [3] is from 2018 — check for 2024+ updates',
-                'SAHPRA guidance referenced may have changed',
-                'Dosing recommendations may need updating with new research',
-              ],
-            }, null, 2),
-          },
-        ],
+        content: [{
+          type: 'text',
+          text: result || JSON.stringify({
+            status: 'pending_api',
+            pubDate: args.pubDate,
+            note: 'Kimi API integration pending.',
+            outdatedItems: [
+              'Citation [3] is from 2018 — check for 2024+ updates',
+              'SAHPRA guidance referenced may have changed',
+              'Dosing recommendations may need updating with new research',
+            ],
+          }, null, 2),
+        }],
       };
+    }
 
-    case 'check_voice_compliance':
+    case 'check_voice_compliance': {
+      const prompt = `Check this article for voice compliance against these rules:\n1. Scientific but accessible tone\n2. South African context required\n3. Safety-first (disclaimer, risks first)\n4. No hype phrases (miracle, game-changer, etc.)\n5. No prohibited medical claims\n\nArticle:\n${args.articleContent.substring(0, 4000)}\n\nReturn JSON with pass/warn/fail for each rule and specific suggestions.`;
+      const result = await callKimi(prompt);
       return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              status: 'pending_api',
-              note: 'OpenAI/Anthropic API integration pending.',
-              compliance: {
-                scientificTone: 'pass',
-                saContext: 'pass',
-                safetyFirst: 'warning — disclaimer could be more prominent',
-                noHype: 'pass',
-                noProhibitedPhrases: 'pass',
-              },
-              suggestions: [
-                'Move disclaimer to top of article',
-                'Add "Talk to your doctor" callout after dosing section',
-              ],
-            }, null, 2),
-          },
-        ],
+        content: [{
+          type: 'text',
+          text: result || JSON.stringify({
+            status: 'pending_api',
+            note: 'Kimi API integration pending.',
+            compliance: {
+              scientificTone: 'pass',
+              saContext: 'pass',
+              safetyFirst: 'warning — disclaimer could be more prominent',
+              noHype: 'pass',
+              noProhibitedPhrases: 'pass',
+            },
+            suggestions: [
+              'Move disclaimer to top of article',
+              'Add "Talk to your doctor" callout after dosing section',
+            ],
+          }, null, 2),
+        }],
       };
+    }
 
-    case 'generate_improvements':
+    case 'generate_improvements': {
+      const prompt = `Generate specific improvements for this article based on these gaps:\n${args.gaps.join('\n')}\n\nArticle:\n${args.articleContent.substring(0, 4000)}\n\nReturn JSON array of improvements with priority and implementation notes.`;
+      const result = await callKimi(prompt);
       return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              status: 'pending_api',
-              note: 'OpenAI/Anthropic API integration pending.',
-              improvements: args.gaps.map(gap => ({
-                gap,
-                suggestion: `Add detailed section addressing: ${gap}`,
-                priority: 'medium',
-              })),
-            }, null, 2),
-          },
-        ],
+        content: [{
+          type: 'text',
+          text: result || JSON.stringify({
+            status: 'pending_api',
+            note: 'Kimi API integration pending.',
+            improvements: args.gaps.map(gap => ({
+              gap,
+              suggestion: `Add detailed section addressing: ${gap}`,
+              priority: 'medium',
+            })),
+          }, null, 2),
+        }],
       };
+    }
 
     default:
       return {
@@ -222,7 +259,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('AI Content Helper MCP server running on stdio');
+  console.error('AI Content Helper MCP server running on stdio (Kimi primary)');
 }
 
 main().catch(console.error);

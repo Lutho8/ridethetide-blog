@@ -59,7 +59,7 @@ ridethetide-blog/
 |---------|-------------|
 | `npm run content:seed` | Generate article ideas from customer language + gap analysis |
 | `npm run content:audit` | Pull Ahrefs + GSC data, flag decay, prioritize updates |
-| `npm run content:refresh` | AI Content Helper — refresh top articles, save drafts |
+| `npm run content:refresh` | Kimi AI Content Helper — refresh top articles, save drafts |
 | `npm run content:gap` | Find competitor topics we haven't covered |
 | `npm run embeddings:build` | Crawl sitemap, generate vector embeddings |
 | `npm run embeddings:drift` | Detect topical drift over time |
@@ -94,6 +94,7 @@ See [`config/mcp-connectors.md`](config/mcp-connectors.md) for full setup.
 | Intercom | Support conversations, common questions | 🔴 Not connected |
 | Slack | Team feedback, internal language | 🔴 Not connected |
 | Brand Radar | AI search visibility, citations | 🔴 Not connected |
+| **Kimi (Moonshot AI)** | AI Content Helper — content analysis, voice compliance, article refresh | 🔴 Not connected |
 
 ### Setup Steps
 

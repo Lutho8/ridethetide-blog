@@ -1,0 +1,37 @@
+{
+  "mcpServers": {
+    "ahrefs": {
+      "command": "npx",
+      "args": ["-y", "@ahrefs/mcp-server"],
+      "env": {
+        "AHREFS_API_TOKEN": "${AHREFS_API_TOKEN}",
+        "AHREFS_PROJECT_ID": "ridethetide-site"
+      }
+    },
+    "gsc": {
+      "command": "npx",
+      "args": ["-y", "@google/mcp-search-console"],
+      "env": {
+        "GSC_CLIENT_ID": "${GSC_CLIENT_ID}",
+        "GSC_CLIENT_SECRET": "${GSC_CLIENT_SECRET}",
+        "GSC_REFRESH_TOKEN": "${GSC_REFRESH_TOKEN}",
+        "GSC_SITE_URL": "https://blog.ridethetide.site/"
+      }
+    },
+    "kimi": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-openai"],
+      "env": {
+        "OPENAI_API_KEY": "${KIMI_API_KEY}",
+        "OPENAI_BASE_URL": "https://api.moonshot.cn/v1"
+      }
+    },
+    "openai": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-openai"],
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      }
+    }
+  }
+}

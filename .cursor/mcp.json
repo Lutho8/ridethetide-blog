@@ -1,0 +1,59 @@
+{
+  "mcpServers": {
+    "ahrefs": {
+      "command": "npx",
+      "args": ["-y", "@ahrefs/mcp-server"],
+      "env": {
+        "AHREFS_API_TOKEN": "${AHREFS_API_TOKEN}",
+        "AHREFS_PROJECT_ID": "ridethetide-site"
+      }
+    },
+    "gsc": {
+      "command": "npx",
+      "args": ["-y", "@google/mcp-search-console"],
+      "env": {
+        "GSC_CLIENT_ID": "${GSC_CLIENT_ID}",
+        "GSC_CLIENT_SECRET": "${GSC_CLIENT_SECRET}",
+        "GSC_REFRESH_TOKEN": "${GSC_REFRESH_TOKEN}",
+        "GSC_SITE_URL": "https://blog.ridethetide.site/"
+      }
+    },
+    "kimi": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-openai"],
+      "env": {
+        "OPENAI_API_KEY": "${KIMI_API_KEY}",
+        "OPENAI_BASE_URL": "https://api.moonshot.cn/v1"
+      }
+    },
+    "openai": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-openai"],
+      "env": {
+        "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      }
+    },
+    "gong": {
+      "command": "npx",
+      "args": ["-y", "@gong/mcp-server"],
+      "env": {
+        "GONG_ACCESS_KEY": "${GONG_ACCESS_KEY}",
+        "GONG_SECRET_KEY": "${GONG_SECRET_KEY}"
+      }
+    },
+    "intercom": {
+      "command": "npx",
+      "args": ["-y", "@intercom/mcp-server"],
+      "env": {
+        "INTERCOM_ACCESS_TOKEN": "${INTERCOM_ACCESS_TOKEN}"
+      }
+    },
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${SLACK_BOT_TOKEN}"
+      }
+    }
+  }
+}

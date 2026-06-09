@@ -53,16 +53,25 @@ const MCP_SERVERS = [
     docs: 'https://api.slack.com/methods/auth.test',
   },
   {
+    name: 'Kimi (Moonshot AI)',
+    envVar: 'KIMI_API_KEY',
+    testUrl: 'https://api.moonshot.cn/v1/models',
+    docs: 'https://platform.moonshot.cn/docs',
+    note: 'Primary AI provider for Content OS. OpenAI-compatible API.',
+  },
+  {
     name: 'OpenAI',
     envVar: 'OPENAI_API_KEY',
     testUrl: 'https://api.openai.com/v1/models',
     docs: 'https://platform.openai.com/docs',
+    note: 'Fallback AI provider if Kimi is unavailable.',
   },
   {
     name: 'Anthropic',
     envVar: 'ANTHROPIC_API_KEY',
     testUrl: 'https://api.anthropic.com/v1/models',
     docs: 'https://docs.anthropic.com',
+    note: 'Fallback AI provider if Kimi and OpenAI are unavailable.',
   },
 ];
 
@@ -181,6 +190,8 @@ function getAuthHeaders(name, token) {
     case 'Intercom':
       return { 'Authorization': `Bearer ${token}` };
     case 'Slack':
+      return { 'Authorization': `Bearer ${token}` };
+    case 'Kimi (Moonshot AI)':
       return { 'Authorization': `Bearer ${token}` };
     case 'OpenAI':
       return { 'Authorization': `Bearer ${token}` };

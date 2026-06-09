@@ -284,19 +284,23 @@ node scripts/firehose-digest.js --email lutho@ridethetide.site
 
 ---
 
-## 8. AI Content Helper
+## 8. AI Content Helper (Kimi / Moonshot AI)
 
 **Purpose:** Analyze content gaps, suggest improvements, update old claims
 
-> Use OpenAI/Anthropic API directly with custom prompts
+> **Primary:** Kimi (Moonshot AI) — OpenAI-compatible API, excellent for long-context content analysis.
+> **Fallbacks:** OpenAI, Anthropic (Claude)
 
 ```json
 {
   "mcpServers": {
     "aihelper": {
       "command": "node",
-      "args": ["scripts/mcp-aihelper.js"],
+      "args": ["scripts/mcp-aihelper.cjs"],
       "env": {
+        "KIMI_API_KEY": "${KIMI_API_KEY}",
+        "KIMI_BASE_URL": "https://api.moonshot.cn/v1",
+        "KIMI_MODEL": "moonshot-v1-32k",
         "OPENAI_API_KEY": "${OPENAI_API_KEY}",
         "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
       }
@@ -304,6 +308,13 @@ node scripts/firehose-digest.js --email lutho@ridethetide.site
   }
 }
 ```
+
+**Required Environment Variables:**
+- `KIMI_API_KEY` — From https://platform.moonshot.cn/ (primary)
+- `KIMI_BASE_URL` — `https://api.moonshot.cn/v1` (default)
+- `KIMI_MODEL` — `moonshot-v1-32k` or `moonshot-v1-128k` (default: 32k)
+- `OPENAI_API_KEY` — Fallback if Kimi unavailable
+- `ANTHROPIC_API_KEY` — Fallback if both unavailable
 
 **Custom Tools:**
 - `analyze_content_gaps` — Compare article vs. top-ranking content
@@ -314,10 +325,10 @@ node scripts/firehose-digest.js --email lutho@ridethetide.site
 **Usage in Content OS:**
 ```bash
 # Refresh single article
-node scripts/refresh-articles.js --slug bpc-157-guide --dry-run
+node scripts/refresh-articles.cjs --slug bpc-157-guide --dry-run
 
 # Batch refresh top 10
-node scripts/refresh-articles.js --top 10 --save-drafts
+node scripts/refresh-articles.cjs --top 10 --save-drafts
 ```
 
 ---

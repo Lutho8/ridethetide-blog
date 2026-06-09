@@ -126,27 +126,9 @@ async function refreshSingleArticle(articlePath, { dryRun }) {
     hasCTA: body.toLowerCase().includes('protocol') || body.toLowerCase().includes('quiz'),
   };
   
-  // Step 2: AI Content Helper analysis (placeholder)
-  console.log('   [2/4] Running AI Content Helper analysis...');
-  const aiAnalysis = {
-    status: 'pending_api_connection',
-    note: 'Requires OPENAI_API_KEY or ANTHROPIC_API_KEY',
-    expectedChecks: [
-      'Compare against top 3 ranking articles for same query',
-      'Identify missing subtopics / questions not answered',
-      'Find outdated statistics or claims',
-      'Check voice compliance against source-of-truth.md',
-      'Suggest new citations from recent research',
-      'Identify internal linking opportunities',
-    ],
-    // When API is connected, this would call the AI helper MCP
-    suggestedUpdates: dryRun ? [] : [
-      'Update: Add 2026 research citations',
-      'Expand: Add section on SA-specific supplier considerations',
-      'Fix: Dosing table needs mcg → mg conversion note',
-      'Add: FAQ schema questions based on Intercom common queries',
-    ],
-  };
+  // Step 2: AI Content Helper analysis via Kimi (Moonshot AI)
+  console.log('   [2/4] Running AI Content Helper analysis via Kimi...');
+  const aiAnalysis = await analyzeWithKimi(extraction, body, dryRun);
   
   // Step 3: Generate refreshed draft
   console.log('   [3/4] Generating refreshed draft...');
@@ -201,6 +183,112 @@ REVIEW CHECKLIST:
 
 ${body}
 `;
+}
+
+async function analyzeWithKimi(extraction, body, dryRun) {
+  const KIMI_API_KEY = process.env.KIMI_API_KEY;
+  const KIMI_BASE_URL = process.env.KIMI_BASE_URL || 'https://api.moonshot.cn/v1';
+  const KIMI_MODEL = process.env.KIMI_MODEL || 'moonshot-v1-32k';
+  
+  if (!KIMI_API_KEY) {
+    return {
+      status: 'pending_api_connection',
+      note: 'Requires KIMI_API_KEY. Get one at https://platform.moonshot.cn/',
+      expectedChecks: [
+        'Compare against top 3 ranking articles for same query',
+        'Identify missing subtopics / questions not answered',
+        'Find outdated statistics or claims',
+        'Check voice compliance against source-of-truth.md',
+        'Suggest new citations from recent research',
+        'Identify internal linking opportunities',
+      ],
+      suggestedUpdates: dryRun ? [] : [
+        'Update: Add 2026 research citations',
+        'Expand: Add section on SA-specific supplier considerations',
+        'Fix: Dosing table needs mcg → mg conversion note',
+        'Add: FAQ schema questions based on Intercom common queries',
+      ],
+    };
+  }
+  
+  const prompt = `You are an expert peptide research content editor for Ride The Tide, a South African peptide research community blog.
+
+Analyze this article for content gaps, outdated information, and voice compliance issues.
+
+ARTICLE TITLE: ${extraction.title}
+CATEGORY: ${extraction.category}
+PEPTIDES: ${extraction.peptides.join(', ')}
+WORD COUNT: ${extraction.wordCount}
+CITATIONS: ${extraction.citations.length}
+PUBLISHED: ${extraction.pubDate}
+
+ARTICLE BODY (first 3000 chars):
+${body.substring(0, 3000)}
+
+Check for:
+1. Missing subtopics compared to typical top-ranking peptide articles
+2. Outdated statistics, claims, or citations (published before 2024)
+3. Voice compliance: safety-first tone, no hype, SA context present
+4. Missing FAQ schema questions
+5. Internal linking opportunities
+6. Dosing accuracy and completeness
+
+Return ONLY a JSON object with this structure:
+{
+  "status": "analyzed",
+  "suggestedUpdates": ["action 1", "action 2", ...],
+  "voiceCompliance": {"scientificTone": "pass|warn|fail", "saContext": "pass|warn|fail", "safetyFirst": "pass|warn|fail", "noHype": "pass|warn|fail"},
+  "priority": "high|medium|low"
+}`;
+
+  try {
+    const response = await fetch(`${KIMI_BASE_URL}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${KIMI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: KIMI_MODEL,
+        messages: [{ role: 'user', content: prompt }],
+        temperature: 0.3,
+        max_tokens: 2000,
+      }),
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Kimi API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    const content = data.choices?.[0]?.message?.content || '';
+    
+    // Extract JSON from response
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        status: 'analyzed_by_kimi',
+        suggestedUpdates: parsed.suggestedUpdates || [],
+        voiceCompliance: parsed.voiceCompliance || {},
+        priority: parsed.priority || 'medium',
+        rawAnalysis: content,
+      };
+    }
+    
+    return {
+      status: 'analyzed_by_kimi',
+      suggestedUpdates: ['Kimi analysis completed but JSON parsing failed — review raw output'],
+      rawAnalysis: content,
+    };
+  } catch (e) {
+    console.log(`   ⚠️  Kimi analysis failed: ${e.message}`);
+    return {
+      status: 'kimi_error',
+      note: e.message,
+      suggestedUpdates: [],
+    };
+  }
 }
 
 // CLI
