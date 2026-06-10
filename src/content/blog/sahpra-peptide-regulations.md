@@ -8,8 +8,9 @@ categoryId: "south-africa"
 peptides: ""
 tags: "SAHPRA, South Africa, legal, regulations, import, research peptides"
 featured: false
+author: "Ride The Tide Research Team"
 readingTime: "10 min read"
-heroImage: "/images/sahpra-regulations.jpg"
+heroImage: "/images/sahpra-regulations.svg"
 faqs:
   - question: "Are peptides legal in South Africa?"
     answer: "Peptides are not scheduled by SAHPRA but are not approved for human use. They exist in a regulatory grey area for research purposes."

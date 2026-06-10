@@ -8,8 +8,9 @@ categoryId: "south-africa"
 peptides: ""
 tags: "South Africa, sourcing, suppliers, Cape Town, Johannesburg, Durban, customs, import, quality, COA, peptides"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "15 min read"
-heroImage: "/images/sa-sourcing-guide.jpg"
+heroImage: "/images/sa-sourcing-guide.svg"
 faqs:
   - question: "Can I legally import peptides to South Africa?"
     answer: "Small quantities for personal research are generally tolerated by SARS customs. Always declare as 'research chemicals'. Large commercial quantities may attract scrutiny. SAHPRA does not regulate unscheduled research peptides."

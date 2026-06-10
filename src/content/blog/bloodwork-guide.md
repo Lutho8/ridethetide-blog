@@ -8,8 +8,9 @@ categoryId: "safety-science"
 peptides: "CJC-1295, Ipamorelin, Semaglutide, BPC-157, TB-500"
 tags: "bloodwork, lab tests, monitoring, safety, IGF-1, glucose, HbA1c, lipids, South Africa, pathology"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "14 min read"
-heroImage: "/images/bloodwork-guide.jpg"
+heroImage: "/images/bloodwork-guide.svg"
 faqs:
   - question: "How much does peptide bloodwork cost in South Africa?"
     answer: "Basic panel (CBC, CMP, lipids): R800-1,200. Comprehensive panel + IGF-1 + thyroid: R2,000-3,500. Full panel with inflammatory markers + hormones: R4,000-6,000. Pathcare, Lancet, and Ampath are the main private labs."

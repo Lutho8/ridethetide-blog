@@ -21,6 +21,7 @@ function parseList(value) {
 
 const peptides = parseList(post.frontmatter.peptides);
 const tags = parseList(post.frontmatter.tags);
+const authorName = post.frontmatter.author || "Ride The Tide Research Team";
 
 // Schema.org Article
 const articleSchema = {
@@ -33,7 +34,7 @@ const articleSchema = {
   "dateModified": post.frontmatter.updatedDate || post.frontmatter.pubDate,
   "author": {
     "@type": "Organization",
-    "name": "Ride The Tide Research Team",
+    "name": authorName,
     "url": "https://ridethetide.site"
   },
   "publisher": {
@@ -81,7 +82,7 @@ const medicalSchema = {
   "lastReviewed": post.frontmatter.updatedDate || post.frontmatter.pubDate,
   "reviewedBy": {
     "@type": "Organization",
-    "name": "Ride The Tide Research Team"
+    "name": authorName
   }
 };
 ---
@@ -118,6 +119,11 @@ const medicalSchema = {
       </h1>
       <p class="text-lg text-slate-600 mb-6">{post.frontmatter.description}</p>
       <div class="flex items-center gap-4 text-sm text-slate-500">
+        <span class="flex items-center gap-1">
+          <span class="w-5 h-5 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 text-xs font-bold">R</span>
+          {authorName}
+        </span>
+        <span>·</span>
         <time datetime={post.frontmatter.pubDate}>{post.frontmatter.pubDate}</time>
         {post.frontmatter.updatedDate && (
           <span>Updated: <time datetime={post.frontmatter.updatedDate}>{post.frontmatter.updatedDate}</time></span>
@@ -126,6 +132,13 @@ const medicalSchema = {
         <span>{post.frontmatter.readingTime || '5 min read'}</span>
       </div>
     </header>
+
+    <!-- Hero Image -->
+    {post.frontmatter.heroImage && (
+      <div class="mb-8 rounded-xl overflow-hidden shadow-lg">
+        <img src={post.frontmatter.heroImage} alt={post.frontmatter.title} class="w-full h-auto object-cover" loading="eager" />
+      </div>
+    )}
 
     <!-- Medical Disclaimer -->
     <div class="disclaimer-box">

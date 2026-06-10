@@ -8,8 +8,9 @@ categoryId: "research-methods"
 peptides: "BPC-157, TB-500, CJC-1295, Ipamorelin"
 tags: "reconstitution, BAC water, dosing calculator, injection, storage"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "8 min read"
-heroImage: "/images/reconstitution-guide.jpg"
+heroImage: "/images/reconstitution-guide.svg"
 faqs:
   - question: "How much BAC water should I use?"
     answer: "Typically 1–2 mL for 5 mg vials. More water = easier dosing accuracy but shorter shelf life."

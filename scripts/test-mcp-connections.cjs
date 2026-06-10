@@ -30,9 +30,9 @@ const MCP_SERVERS = [
   {
     name: 'Google Search Console',
     envVar: 'GSC_REFRESH_TOKEN',
-    testUrl: null, // Requires OAuth flow
+    testUrl: null,
     docs: 'https://developers.google.com/webmaster-tools/v3',
-    note: 'Requires OAuth flow. Run: node scripts/gsc-auth.js',
+    testFunction: testGSC,
   },
   {
     name: 'Gong',
@@ -91,6 +91,10 @@ async function testConnections() {
     if (!hasEnv) {
       status = 'missing';
       message = `Environment variable ${server.envVar} not set`;
+    } else if (server.testFunction) {
+      const result = await server.testFunction(envValue);
+      status = result.status;
+      message = result.message;
     } else if (!server.testUrl) {
       status = 'manual';
       message = server.note || 'Requires manual setup';
@@ -177,6 +181,51 @@ async function testConnections() {
   }, null, 2));
   
   console.log(`\nReport saved: ${reportPath}`);
+}
+
+async function testGSC(refreshToken) {
+  const CLIENT_ID = process.env.GSC_CLIENT_ID;
+  const CLIENT_SECRET = process.env.GSC_CLIENT_SECRET;
+  
+  if (!CLIENT_ID || !CLIENT_SECRET) {
+    return { status: 'manual', message: 'GSC_CLIENT_ID or GSC_CLIENT_SECRET not set. Run: node scripts/gsc-auth.cjs' };
+  }
+  
+  try {
+    // Exchange refresh token for access token
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: CLIENT_ID,
+        client_secret: CLIENT_SECRET,
+        refresh_token: refreshToken,
+        grant_type: 'refresh_token',
+      }).toString(),
+    });
+    
+    const tokenData = await tokenRes.json();
+    
+    if (tokenData.error) {
+      return { status: 'auth_error', message: `Token refresh failed: ${tokenData.error}` };
+    }
+    
+    // Test GSC API
+    const apiRes = await fetch('https://www.googleapis.com/webmasters/v3/sites', {
+      headers: { 'Authorization': `Bearer ${tokenData.access_token}` },
+    });
+    
+    const apiData = await apiRes.json();
+    
+    if (apiData.error) {
+      return { status: 'auth_error', message: `API error: ${apiData.error.message}` };
+    }
+    
+    const siteCount = apiData.siteEntry?.length || 0;
+    return { status: 'connected', message: `API responded with 200. Found ${siteCount} verified sites.` };
+  } catch (e) {
+    return { status: 'network_error', message: `Network error: ${e.message}` };
+  }
 }
 
 function getAuthHeaders(name, token) {

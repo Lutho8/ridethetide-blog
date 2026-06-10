@@ -8,8 +8,9 @@ categoryId: "peptide-deep-dives"
 peptides: "BPC-157"
 tags: "BPC-157, healing, gut health, South Africa, dosing, TB-500 stack"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "12 min read"
-heroImage: "/images/bpc-157-guide.jpg"
+heroImage: "/images/bpc-157-guide.svg"
 faqs:
   - question: "Is BPC-157 legal in South Africa?"
     answer: "BPC-157 is not approved by SAHPRA for human use. It is available for research purposes only. Always consult a healthcare professional."

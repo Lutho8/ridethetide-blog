@@ -8,8 +8,9 @@ categoryId: "peptide-deep-dives"
 peptides: "Semaglutide, Tirzepatide, Retatrutide"
 tags: "Semaglutide, Tirzepatide, Retatrutide, GLP-1, GIP, weight loss, fat loss, comparison, South Africa"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "18 min read"
-heroImage: "/images/glp1-comparison.jpg"
+heroImage: "/images/glp1-comparison.svg"
 faqs:
   - question: "Which GLP-1 agonist is most effective for weight loss?"
     answer: "Retatrutide (triple agonist) shows the highest weight loss in trials (~15-18% at 48 weeks). Tirzepatide (~15-20% at 72 weeks). Semaglutide (~15% at 68 weeks). Individual response varies significantly."

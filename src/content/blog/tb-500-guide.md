@@ -8,8 +8,9 @@ categoryId: "peptide-deep-dives"
 peptides: "TB-500"
 tags: "TB-500, Thymosin Beta-4, healing, recovery, actin, cardiac, dosing, South Africa"
 featured: false
+author: "Ride The Tide Research Team"
 readingTime: "12 min read"
-heroImage: "/images/tb-500-guide.jpg"
+heroImage: "/images/tb-500-guide.svg"
 faqs:
   - question: "Is TB-500 legal in South Africa?"
     answer: "TB-500 is not approved by SAHPRA for human use. It is available for research purposes only. Always consult a healthcare professional."

@@ -8,8 +8,9 @@ categoryId: "case-studies"
 peptides: "CJC-1295, Ipamorelin"
 tags: "fat loss, case study, CJC-1295, Ipamorelin, protocol, transformation"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "15 min read"
-heroImage: "/images/fat-loss-protocol.jpg"
+heroImage: "/images/fat-loss-protocol.svg"
 faqs:
   - question: "Is this protocol safe for everyone?"
     answer: "No. This is a personal research account, not a recommendation. Individual results vary. Consult a healthcare professional before starting any peptide protocol."

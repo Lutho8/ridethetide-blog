@@ -8,8 +8,9 @@ categoryId: "protocol-guides"
 peptides: "CJC-1295, Ipamorelin"
 tags: "CJC-1295, Ipamorelin, GH stack, growth hormone, secretagogue, dosing, protocol, South Africa"
 featured: true
+author: "Ride The Tide Research Team"
 readingTime: "15 min read"
-heroImage: "/images/cjc-ipamorelin-stack.jpg"
+heroImage: "/images/cjc-ipamorelin-stack.svg"
 faqs:
   - question: "How soon will I see results from CJC-1295 + Ipamorelin?"
     answer: "Most researchers report improved sleep quality within 1-2 weeks. Body composition changes typically appear at 4-6 weeks. Full results by 12 weeks."

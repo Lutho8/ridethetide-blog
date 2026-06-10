@@ -8,8 +8,9 @@ categoryId: "peptide-deep-dives"
 peptides: "GHK-Cu"
 tags: "GHK-Cu, copper peptide, skin, hair, collagen, anti-aging, wound healing, dosing, South Africa"
 featured: false
+author: "Ride The Tide Research Team"
 readingTime: "12 min read"
-heroImage: "/images/ghk-cu-guide.jpg"
+heroImage: "/images/ghk-cu-guide.svg"
 faqs:
   - question: "Can GHK-Cu be used topically or injected?"
     answer: "Both. Topical application (serums/creams) is common for skin/hair benefits. Subcutaneous or intradermal injection may provide deeper tissue effects. Research context only."

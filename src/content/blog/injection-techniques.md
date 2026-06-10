@@ -8,8 +8,9 @@ categoryId: "research-methods"
 peptides: "BPC-157, TB-500, CJC-1295, Ipamorelin, Semaglutide"
 tags: "injection, subcutaneous, intramuscular, intranasal, technique, safety, needles, South Africa"
 featured: false
+author: "Ride The Tide Research Team"
 readingTime: "12 min read"
-heroImage: "/images/injection-techniques.jpg"
+heroImage: "/images/injection-techniques.svg"
 faqs:
   - question: "What needle size should I use for peptide injections?"
     answer: "For subcutaneous: 31G 6mm or 30G 8mm insulin syringes. For intramuscular: 29G 12mm. All available without prescription at SA pharmacies. 31G causes least pain."

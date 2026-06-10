@@ -1,14 +1,34 @@
 /**
  * Indexing Audit
- * 
- * Checks GSC indexing status for all site pages.
+ *
+ * Uses live GSC Search Analytics + URL Inspection API to check indexing status.
  * Flags pages excluded from index and provides remediation steps.
- * 
- * Usage: node scripts/indexing-audit.js
+ *
+ * Usage: node scripts/indexing-audit.cjs
  */
 
 const fs = require('fs');
 const path = require('path');
+const https = require('https');
+const {
+  getDateDaysAgo,
+  refreshAccessToken,
+  querySearchAnalytics,
+  inspectUrl,
+  listSites,
+} = require('./lib/gsc-client.cjs');
+
+// Load .env if exists
+const envPath = path.join(__dirname, '../.env');
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8');
+  envContent.split('\n').forEach(line => {
+    const [key, ...rest] = line.split('=');
+    if (key && rest.length && !key.startsWith('#')) {
+      process.env[key.trim()] = rest.join('=').trim();
+    }
+  });
+}
 
 const CONFIG = {
   gscSite: process.env.GSC_SITE_URL || 'https://blog.ridethetide.site/',
@@ -27,24 +47,265 @@ if (!fs.existsSync(CONFIG.outputDir)) {
 async function runIndexingAudit() {
   console.log('🔍 Indexing Audit');
   console.log(`   Site: ${CONFIG.gscSite}`);
-  
+
   if (!process.env.GSC_REFRESH_TOKEN) {
     console.log('\n⚠️  GSC not connected. This script requires:');
     console.log('   1. GSC_CLIENT_ID, GSC_CLIENT_SECRET, GSC_REFRESH_TOKEN in .env');
-    console.log('   2. Run: node scripts/gsc-auth.js to get refresh token');
+    console.log('   2. Run: node scripts/gsc-auth.cjs to get refresh token');
     console.log('   3. GSC property must be verified for your site');
-    
+
     generateTemplateReport();
     return;
   }
-  
-  console.log('\n📋 Expected workflow (requires GSC MCP):');
-  console.log('   1. Query GSC Indexing API for URL inspection');
-  console.log('   2. Check sitemap submission status');
-  console.log('   3. Identify excluded pages and reasons');
-  console.log('   4. Generate remediation recommendations');
-  
-  generateTemplateReport();
+
+  try {
+    console.log('\n🔐 Refreshing GSC access token...');
+    const accessToken = await refreshAccessToken();
+    console.log('   ✅ Token refreshed');
+
+    // Verify the site is registered in GSC
+    console.log('\n📋 Checking verified GSC sites...');
+    const sitesData = await listSites(accessToken);
+
+    if (sitesData.error) {
+      throw new Error(`Failed to list sites: ${sitesData.error.message || sitesData.error}`);
+    }
+
+    const verifiedSites = (sitesData.siteEntry || []).map(s => s.siteUrl);
+    console.log(`   Found ${verifiedSites.length} verified site(s):`);
+    verifiedSites.forEach(s => console.log(`      - ${s}`));
+
+    const isVerified = verifiedSites.some(s => {
+      // Handle both exact URL and domain property matches
+      if (s === CONFIG.gscSite) return true;
+      if (s.startsWith('sc-domain:')) {
+        const domain = s.replace('sc-domain:', '');
+        return new URL(CONFIG.gscSite).hostname.endsWith(domain);
+      }
+      return false;
+    });
+
+    if (!isVerified) {
+      console.log(`\n❌ ${CONFIG.gscSite} is NOT verified in GSC.`);
+      console.log('   You need to add and verify this property:');
+      console.log('   → https://search.google.com/search-console/welcome');
+      console.log('\n   Alternatively, update GSC_SITE_URL in .env to one of your verified sites.');
+
+      const report = {
+        generatedAt: new Date().toISOString(),
+        site: CONFIG.gscSite,
+        status: 'site_not_verified',
+        verifiedSites,
+        note: `${CONFIG.gscSite} is not verified. Add it to GSC or update GSC_SITE_URL.`,
+        summary: { totalUrls: 0, indexed: 0, notIndexed: 0, excluded: 0, pending: 0 },
+        excludedPages: [],
+        notIndexedPages: [],
+        sitemapStatus: CONFIG.sitemaps.map(url => ({ url, status: 'pending', urlsSubmitted: 0, urlsIndexed: 0 })),
+        recommendations: [
+          `Verify ${CONFIG.gscSite} in Google Search Console`,
+          'Submit sitemap after verification',
+          'Request indexing for key pages',
+        ],
+      };
+
+      saveReport(report);
+      return;
+    }
+
+    console.log(`   ✅ ${CONFIG.gscSite} is verified`);
+
+    // Fetch search analytics to find pages Google knows about
+    const lookbackDays = 90;
+    const startDate = getDateDaysAgo(lookbackDays + 2);
+    const endDate = getDateDaysAgo(2);
+
+    console.log(`\n📊 Fetching search analytics (${startDate} → ${endDate})...`);
+    const searchData = await querySearchAnalytics(accessToken, CONFIG.gscSite, startDate, endDate);
+
+    if (searchData.error) {
+      throw new Error(`Search Analytics error: ${searchData.error.message || searchData.error}`);
+    }
+
+    const knownUrls = (searchData.rows || []).map(row => row.keys[0]);
+    console.log(`   Found ${knownUrls.length} URL(s) with search data`);
+
+    // Inspect each URL
+    console.log('\n🔎 Running URL Inspection...');
+    const inspectedPages = [];
+    const errors = [];
+
+    for (let i = 0; i < knownUrls.length; i++) {
+      const url = knownUrls[i];
+      process.stdout.write(`   [${i + 1}/${knownUrls.length}] ${url} ... `);
+
+      try {
+        const result = await inspectUrl(accessToken, CONFIG.gscSite, url);
+
+        if (result.error) {
+          errors.push({ url, error: result.error.message || result.error });
+          console.log(`error: ${result.error.message || result.error}`);
+          continue;
+        }
+
+        const idx = result.inspectionResult?.indexStatusResult || {};
+        inspectedPages.push({
+          url,
+          coverageState: idx.coverageState || 'Unknown',
+          lastCrawlTime: idx.lastCrawlTime || null,
+          pageFetchState: idx.pageFetchState || 'Unknown',
+          robotsTxtState: idx.robotsTxtState || 'Unknown',
+          indexingState: idx.indexingState || 'Unknown',
+          verdict: idx.verdict || 'Unknown',
+        });
+
+        console.log(idx.coverageState || 'Unknown');
+      } catch (e) {
+        errors.push({ url, error: e.message });
+        console.log(`error: ${e.message}`);
+      }
+    }
+
+    // Build report
+    const indexed = inspectedPages.filter(p =>
+      p.coverageState.includes('Indexed') || p.coverageState.includes('Submitted and indexed')
+    );
+    const notIndexed = inspectedPages.filter(p =>
+      p.coverageState.includes('not indexed') || p.coverageState.includes('Duplicate')
+    );
+    const excluded = inspectedPages.filter(p =>
+      p.coverageState.includes('Excluded') || p.coverageState.includes('Blocked')
+    );
+    const pending = inspectedPages.filter(p =>
+      p.coverageState.includes('Discovered') || p.coverageState.includes('Crawled')
+    );
+
+    const report = {
+      generatedAt: new Date().toISOString(),
+      site: CONFIG.gscSite,
+      status: 'live_gsc_data',
+      dateRange: { start: startDate, end: endDate },
+      summary: {
+        totalUrls: inspectedPages.length,
+        indexed: indexed.length,
+        notIndexed: notIndexed.length,
+        excluded: excluded.length,
+        pending: pending.length,
+        errors: errors.length,
+      },
+      indexedPages: indexed,
+      notIndexedPages: notIndexed.map(p => ({
+        url: p.url,
+        status: p.coverageState,
+        reason: getNotIndexedReason(p),
+        action: getNotIndexedAction(p),
+        priority: 'P1',
+      })),
+      excludedPages: excluded.map(p => ({
+        url: p.url,
+        status: p.coverageState,
+        reason: getExcludedReason(p),
+        action: getExcludedAction(p),
+        priority: 'P2',
+      })),
+      pendingPages: pending.map(p => ({
+        url: p.url,
+        status: p.coverageState,
+        action: 'Monitor — Google is processing this page',
+        priority: 'P3',
+      })),
+      sitemapStatus: CONFIG.sitemaps.map(url => ({
+        url,
+        status: 'pending_manual_submission',
+        lastSubmitted: null,
+        urlsSubmitted: 0,
+        urlsIndexed: indexed.length,
+      })),
+      recommendations: generateRecommendations(indexed.length, notIndexed.length, excluded.length, pending.length),
+      rawInspectionData: inspectedPages,
+      inspectionErrors: errors,
+    };
+
+    saveReport(report);
+
+    console.log('\n✅ Live indexing audit complete!');
+    console.log(`   Indexed: ${indexed.length}`);
+    console.log(`   Not indexed: ${notIndexed.length}`);
+    console.log(`   Excluded: ${excluded.length}`);
+    console.log(`   Pending: ${pending.length}`);
+    if (errors.length > 0) {
+      console.log(`   Errors: ${errors.length}`);
+    }
+
+  } catch (error) {
+    console.error(`\n❌ Error: ${error.message}`);
+    console.log('\nFalling back to template report...');
+    const report = generateFallbackReport();
+    report.status = 'error: ' + error.message;
+    saveReport(report);
+  }
+}
+
+function getNotIndexedReason(page) {
+  if (page.coverageState.includes('Duplicate')) return 'Duplicate content without user-selected canonical';
+  if (page.coverageState.includes('Crawled')) return 'Page crawled but not indexed (thin or low-quality content)';
+  if (page.coverageState.includes('Discovered')) return 'Discovered but not yet crawled';
+  return 'Unknown indexing issue';
+}
+
+function getNotIndexedAction(page) {
+  if (page.coverageState.includes('Duplicate')) return 'Add canonical tag or consolidate content';
+  if (page.coverageState.includes('Crawled')) return 'Add unique valuable content, improve E-E-A-T, build backlinks';
+  if (page.coverageState.includes('Discovered')) return 'Submit URL for indexing, improve internal links';
+  return 'Investigate and fix indexing issues';
+}
+
+function getExcludedReason(page) {
+  if (page.robotsTxtState === 'Blocked') return 'Blocked by robots.txt';
+  if (page.pageFetchState === 'Not found') return 'Page returns 404';
+  return 'Excluded by policy (noindex, redirect, etc.)';
+}
+
+function getExcludedAction(page) {
+  if (page.robotsTxtState === 'Blocked') return 'Update robots.txt if page should be indexed';
+  if (page.pageFetchState === 'Not found') return 'Fix broken links or restore page';
+  return 'Review page meta tags and canonical settings';
+}
+
+function generateRecommendations(indexed, notIndexed, excluded, pending) {
+  const recs = [];
+  if (notIndexed > 0) {
+    recs.push(`Fix ${notIndexed} "not indexed" page(s) with content improvements`);
+    recs.push('Request indexing for not-indexed pages via GSC');
+  }
+  if (excluded > 0) {
+    recs.push(`Review ${excluded} excluded page(s) — check noindex tags and robots.txt`);
+  }
+  if (pending > 0) {
+    recs.push(`Monitor ${pending} pending page(s) — Google is still processing`);
+  }
+  if (indexed === 0 && notIndexed === 0 && excluded === 0) {
+    recs.push('No pages found in GSC — site may be too new or sitemap not submitted');
+    recs.push('Submit sitemap and request indexing for key pages');
+  }
+  recs.push('Submit sitemap to GSC if not already done');
+  recs.push('Run indexing audit weekly for new content');
+  return recs;
+}
+
+function generateFallbackReport() {
+  return {
+    generatedAt: new Date().toISOString(),
+    site: CONFIG.gscSite,
+    status: 'error',
+    summary: { totalUrls: 0, indexed: 0, notIndexed: 0, excluded: 0, pending: 0 },
+    excludedPages: [],
+    notIndexedPages: [],
+    sitemapStatus: CONFIG.sitemaps.map(url => ({ url, status: 'pending', urlsSubmitted: 0, urlsIndexed: 0 })),
+    recommendations: [
+      'Fix GSC connection and re-run audit',
+      'Ensure site is verified in Google Search Console',
+    ],
+  };
 }
 
 function generateTemplateReport() {
@@ -52,8 +313,8 @@ function generateTemplateReport() {
     generatedAt: new Date().toISOString(),
     site: CONFIG.gscSite,
     status: 'template',
-    note: 'Connect GSC MCP for live indexing data',
-    
+    note: 'Connect GSC for live indexing data',
+
     summary: {
       totalUrls: 0,
       indexed: 0,
@@ -61,7 +322,7 @@ function generateTemplateReport() {
       excluded: 0,
       pending: 0,
     },
-    
+
     excludedPages: [
       {
         url: '/blog/draft-article',
@@ -70,15 +331,8 @@ function generateTemplateReport() {
         action: 'Remove noindex when published',
         priority: 'P2',
       },
-      {
-        url: '/admin/*',
-        status: 'Blocked by robots.txt',
-        reason: 'Admin pages correctly blocked',
-        action: 'No action needed',
-        priority: 'P3',
-      },
     ],
-    
+
     notIndexedPages: [
       {
         url: '/blog/bpc-157-guide',
@@ -87,15 +341,8 @@ function generateTemplateReport() {
         action: 'Submit URL via GSC, request indexing',
         priority: 'P1',
       },
-      {
-        url: '/guides/reconstitution',
-        status: 'Crawled - currently not indexed',
-        reason: 'May be duplicate content or thin content',
-        action: 'Add unique content, improve internal linking',
-        priority: 'P1',
-      },
     ],
-    
+
     sitemapStatus: CONFIG.sitemaps.map(url => ({
       url,
       status: 'pending',
@@ -103,121 +350,133 @@ function generateTemplateReport() {
       urlsSubmitted: 0,
       urlsIndexed: 0,
     })),
-    
+
     recommendations: [
       'Submit sitemap to GSC for blog.ridethetide.site',
       'Request indexing for new articles immediately after publish',
       'Monitor "Discovered - not indexed" pages weekly',
-      'Fix "Crawled - not indexed" pages with content improvements',
-      'Ensure all published pages have canonical tags',
-      'Check for duplicate content across ridethetide.site and ridethetide.info',
     ],
   };
-  
+
+  saveReport(report);
+}
+
+function saveReport(report) {
   const timestamp = new Date().toISOString().split('T')[0];
   const filename = `indexing-audit-${timestamp}`;
-  
+
   const jsonPath = path.join(CONFIG.outputDir, `${filename}.json`);
   fs.writeFileSync(jsonPath, JSON.stringify(report, null, 2));
-  
+
   const mdPath = path.join(CONFIG.outputDir, `${filename}.md`);
   fs.writeFileSync(mdPath, generateMarkdownReport(report));
-  
-  console.log('\n✅ Indexing Audit Report Generated!');
-  console.log(`   JSON: ${jsonPath}`);
+
+  console.log(`\n   JSON: ${jsonPath}`);
   console.log(`   Markdown: ${mdPath}`);
 }
 
 function generateMarkdownReport(report) {
-  return `# Indexing Audit Report — ${report.site}
+  let md = `# Indexing Audit Report — ${report.site}\n\n`;
+  md += `> Generated: ${report.generatedAt}\n`;
+  md += `> Status: **${report.status}**\n`;
+  if (report.dateRange) {
+    md += `> Date range: ${report.dateRange.start} → ${report.dateRange.end}\n`;
+  }
+  if (report.note) {
+    md += `> Note: ${report.note}\n`;
+  }
+  md += `\n---\n\n`;
 
-> Generated: ${report.generatedAt}
-> Status: ${report.status}
+  if (report.summary) {
+    md += `## Summary\n\n`;
+    md += `| Metric | Count |\n`;
+    md += `|--------|-------|\n`;
+    md += `| Total URLs inspected | ${report.summary.totalUrls} |\n`;
+    md += `| Indexed | ${report.summary.indexed} ✅ |\n`;
+    md += `| Not Indexed | ${report.summary.notIndexed} ⚠️ |\n`;
+    md += `| Excluded | ${report.summary.excluded} 🚫 |\n`;
+    md += `| Pending | ${report.summary.pending} ⏳ |\n`;
+    if (report.summary.errors > 0) {
+      md += `| Inspection Errors | ${report.summary.errors} ❌ |\n`;
+    }
+    md += `\n---\n\n`;
+  }
 
----
+  if (report.verifiedSites && report.verifiedSites.length > 0) {
+    md += `## Verified GSC Sites\n\n`;
+    report.verifiedSites.forEach(s => md += `- ${s}\n`);
+    md += `\n---\n\n`;
+  }
 
-## Summary
+  if (report.notIndexedPages && report.notIndexedPages.length > 0) {
+    md += `## ⚠️ Not Indexed Pages (Action Required)\n\n`;
+    report.notIndexedPages.forEach(p => {
+      md += `### ${p.url}\n`;
+      md += `- **Status:** ${p.status}\n`;
+      md += `- **Reason:** ${p.reason}\n`;
+      md += `- **Action:** ${p.action}\n`;
+      md += `- **Priority:** ${p.priority}\n\n`;
+    });
+    md += `\n`;
+  }
 
-| Metric | Count |
-|--------|-------|
-| Total URLs | ${report.summary.totalUrls} |
-| Indexed | ${report.summary.indexed} |
-| Not Indexed | ${report.summary.notIndexed} |
-| Excluded | ${report.summary.excluded} |
-| Pending | ${report.summary.pending} |
+  if (report.excludedPages && report.excludedPages.length > 0) {
+    md += `## 🚫 Excluded Pages (Review)\n\n`;
+    report.excludedPages.forEach(p => {
+      md += `### ${p.url}\n`;
+      md += `- **Status:** ${p.status}\n`;
+      md += `- **Reason:** ${p.reason}\n`;
+      md += `- **Action:** ${p.action}\n`;
+      md += `- **Priority:** ${p.priority}\n\n`;
+    });
+    md += `\n`;
+  }
 
----
+  if (report.pendingPages && report.pendingPages.length > 0) {
+    md += `## ⏳ Pending Pages (Monitor)\n\n`;
+    report.pendingPages.forEach(p => {
+      md += `### ${p.url}\n`;
+      md += `- **Status:** ${p.status}\n`;
+      md += `- **Action:** ${p.action}\n`;
+      md += `- **Priority:** ${p.priority}\n\n`;
+    });
+    md += `\n`;
+  }
 
-## Sitemap Status
+  if (report.indexedPages && report.indexedPages.length > 0) {
+    md += `## ✅ Indexed Pages\n\n`;
+    report.indexedPages.forEach(p => {
+      md += `- ${p.url} (${p.coverageState})\n`;
+    });
+    md += `\n`;
+  }
 
-| Sitemap | Status | URLs Submitted | URLs Indexed |
-|---------|--------|----------------|--------------|
-${report.sitemapStatus.map(s => `| ${s.url} | ${s.status} | ${s.urlsSubmitted} | ${s.urlsIndexed} |`).join('\n')}
+  if (report.sitemapStatus && report.sitemapStatus.length > 0) {
+    md += `## Sitemap Status\n\n`;
+    md += `| Sitemap | Status | URLs Submitted | URLs Indexed |\n`;
+    md += `|---------|--------|----------------|--------------|\n`;
+    report.sitemapStatus.forEach(s => {
+      md += `| ${s.url} | ${s.status} | ${s.urlsSubmitted} | ${s.urlsIndexed} |\n`;
+    });
+    md += `\n`;
+  }
 
----
+  if (report.recommendations && report.recommendations.length > 0) {
+    md += `## Recommendations\n\n`;
+    report.recommendations.forEach(r => md += `- ${r}\n`);
+    md += `\n`;
+  }
 
-## Not Indexed Pages (Action Required)
+  if (report.inspectionErrors && report.inspectionErrors.length > 0) {
+    md += `## Inspection Errors\n\n`;
+    report.inspectionErrors.forEach(e => {
+      md += `- ${e.url}: ${e.error}\n`;
+    });
+    md += `\n`;
+  }
 
-${report.notIndexedPages.map(p => `
-### ${p.url}
-- **Status:** ${p.status}
-- **Reason:** ${p.reason}
-- **Action:** ${p.action}
-- **Priority:** ${p.priority}
-`).join('\n')}
-
----
-
-## Excluded Pages (Review)
-
-${report.excludedPages.map(p => `
-### ${p.url}
-- **Status:** ${p.status}
-- **Reason:** ${p.reason}
-- **Action:** ${p.action}
-- **Priority:** ${p.priority}
-`).join('\n')}
-
----
-
-## Recommendations
-
-${report.recommendations.map(r => `- [ ] ${r}`).join('\n')}
-
----
-
-## How to Fix Common Indexing Issues
-
-### "Discovered - currently not indexed"
-1. Submit URL directly in GSC
-2. Improve internal linking from indexed pages
-3. Share on social media to attract crawl
-4. Ensure page is in sitemap
-
-### "Crawled - currently not indexed"
-1. Add more unique, valuable content
-2. Improve E-E-A-T signals (author bios, citations)
-3. Add FAQ schema for rich snippets
-4. Build backlinks to the page
-5. Check for duplicate content issues
-
-### "Duplicate without user-selected canonical"
-1. Add canonical tag to preferred version
-2. Use 301 redirects for duplicate URLs
-3. Consolidate similar content
-
-### "Page with redirect"
-1. Update internal links to point to final URL
-2. Ensure redirect chain is not too long
-
----
-
-*Run weekly via: node scripts/indexing-audit.js*
-`;
+  md += `---\n\n*Run weekly via: node scripts/indexing-audit.cjs*\n`;
+  return md;
 }
 
-if (require.main === module) {
-  runIndexingAudit().catch(console.error);
-}
-
-module.exports = { runIndexingAudit };
+runIndexingAudit().catch(console.error);
