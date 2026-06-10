@@ -8,8 +8,7 @@ export default defineConfig({
   site: 'https://blog.ridethetide.site',
   integrations: [
     mdx(),
-    // sitemap() disabled temporarily - version compatibility issue
-    // Will re-enable after upgrading @astrojs/sitemap
+    sitemap(),
     tailwind({
       applyBaseStyles: false,
     }),

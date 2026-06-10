@@ -1,15 +1,19 @@
 /**
  * Article Refresh Pipeline
- * 
+ *
  * Daily cron job to refresh highest priority articles:
  * 1. Extract article content
- * 2. Run through AI Content Helper to fill topic gaps
+ * 2. Run through AI Content Helper (OpenAI) to fill topic gaps
  * 3. Update old claims and statistics
  * 4. Save as draft for human review
  */
 
 const fs = require('fs');
 const path = require('path');
+const { loadEnv, callAI, extractJsonFromResponse } = require('./lib/ai-client.cjs');
+
+// Load environment variables
+loadEnv();
 
 const CONFIG = {
   contentDir: path.join(__dirname, '../src/content/blog'),
@@ -25,17 +29,17 @@ const CONFIG = {
 
 async function refreshArticles(options = {}) {
   const { slug, top = CONFIG.maxArticlesPerRun, dryRun = false } = options;
-  
+
   console.log('🔄 Article Refresh Pipeline');
   console.log(`   Mode: ${dryRun ? 'DRY RUN' : 'LIVE'}`);
   console.log(`   Max articles: ${top}`);
-  
+
   // Get priority queue (or build from content audit)
   let priorityQueue = [];
   if (fs.existsSync(CONFIG.priorityFile)) {
     priorityQueue = JSON.parse(fs.readFileSync(CONFIG.priorityFile, 'utf8'));
   }
-  
+
   // If specific slug provided, refresh that
   if (slug) {
     const articlePath = path.join(CONFIG.contentDir, `${slug}.md`);
@@ -46,23 +50,23 @@ async function refreshArticles(options = {}) {
     }
     return;
   }
-  
+
   // Otherwise refresh top N from priority queue
   // If no priority queue, refresh oldest articles
   const articles = getAllArticles();
-  const toRefresh = priorityQueue.length > 0 
+  const toRefresh = priorityQueue.length > 0
     ? priorityQueue.slice(0, top).map(p => articles.find(a => a.slug === p.slug)).filter(Boolean)
     : articles.sort((a, b) => new Date(a.frontmatter.updatedDate || a.frontmatter.pubDate) - new Date(b.frontmatter.updatedDate || b.frontmatter.pubDate)).slice(0, top);
-  
+
   console.log(`\n📋 Refreshing ${toRefresh.length} articles:`);
   for (const article of toRefresh) {
     console.log(`   - ${article.slug}: ${article.frontmatter.title}`);
   }
-  
+
   for (const article of toRefresh) {
     await refreshSingleArticle(article.path, { dryRun });
   }
-  
+
   console.log('\n✅ Refresh complete!');
   if (!dryRun) {
     console.log(`   Drafts saved to: ${CONFIG.draftsDir}`);
@@ -89,7 +93,7 @@ function getAllArticles() {
 function parseFrontmatter(content) {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
   if (!match) return {};
-  
+
   const fm = {};
   match[1].split('\n').forEach(line => {
     const [key, ...rest] = line.split(':');
@@ -103,11 +107,11 @@ function parseFrontmatter(content) {
 async function refreshSingleArticle(articlePath, { dryRun }) {
   const slug = path.basename(articlePath, '.md');
   console.log(`\n📝 Refreshing: ${slug}`);
-  
+
   const content = fs.readFileSync(articlePath, 'utf8');
   const frontmatter = parseFrontmatter(content);
   const body = content.replace(/^---\n[\s\S]*?\n---\n/, '');
-  
+
   // Step 1: Extract current content
   console.log('   [1/4] Extracting current content...');
   const extraction = {
@@ -125,11 +129,11 @@ async function refreshSingleArticle(articlePath, { dryRun }) {
     hasDosingTable: body.includes('|') && body.toLowerCase().includes('dose'),
     hasCTA: body.toLowerCase().includes('protocol') || body.toLowerCase().includes('quiz'),
   };
-  
-  // Step 2: AI Content Helper analysis via Kimi (Moonshot AI)
-  console.log('   [2/4] Running AI Content Helper analysis via Kimi...');
-  const aiAnalysis = await analyzeWithKimi(extraction, body, dryRun);
-  
+
+  // Step 2: AI Content Helper analysis via OpenAI
+  console.log('   [2/4] Running AI Content Helper analysis...');
+  const aiAnalysis = await analyzeWithAI(extraction, body, dryRun);
+
   // Step 3: Generate refreshed draft
   console.log('   [3/4] Generating refreshed draft...');
   const refreshedFrontmatter = {
@@ -138,9 +142,9 @@ async function refreshSingleArticle(articlePath, { dryRun }) {
     refreshedBy: 'ai-content-helper',
     refreshReason: aiAnalysis.suggestedUpdates.join('; '),
   };
-  
+
   const draftContent = generateDraftContent(refreshedFrontmatter, body, aiAnalysis);
-  
+
   // Step 4: Save draft
   console.log('   [4/4] Saving draft...');
   if (!dryRun) {
@@ -150,7 +154,7 @@ async function refreshSingleArticle(articlePath, { dryRun }) {
   } else {
     console.log('   📝 DRY RUN — would save to:', path.join(CONFIG.draftsDir, `${slug}-refresh-*.md`));
   }
-  
+
   // Save analysis report
   const analysisPath = path.join(CONFIG.draftsDir, `${slug}-analysis-${new Date().toISOString().split('T')[0]}.json`);
   if (!dryRun) {
@@ -162,7 +166,7 @@ function generateDraftContent(frontmatter, body, aiAnalysis) {
   const fmLines = Object.entries(frontmatter)
     .map(([k, v]) => `${k}: ${v}`)
     .join('\n');
-  
+
   return `---
 ${fmLines}
 ---
@@ -185,15 +189,14 @@ ${body}
 `;
 }
 
-async function analyzeWithKimi(extraction, body, dryRun) {
-  const KIMI_API_KEY = process.env.KIMI_API_KEY;
-  const KIMI_BASE_URL = process.env.KIMI_BASE_URL || 'https://api.moonshot.cn/v1';
-  const KIMI_MODEL = process.env.KIMI_MODEL || 'moonshot-v1-32k';
-  
-  if (!KIMI_API_KEY) {
+async function analyzeWithAI(extraction, body, dryRun) {
+  const hasKimi = !!process.env.KIMI_API_KEY;
+  const hasOpenAI = !!process.env.OPENAI_API_KEY;
+
+  if (!hasKimi && !hasOpenAI) {
     return {
       status: 'pending_api_connection',
-      note: 'Requires KIMI_API_KEY. Get one at https://platform.moonshot.cn/',
+      note: 'Requires KIMI_API_KEY or OPENAI_API_KEY. Get Kimi key at https://platform.moonshot.cn/ or OpenAI at https://platform.openai.com/api-keys',
       expectedChecks: [
         'Compare against top 3 ranking articles for same query',
         'Identify missing subtopics / questions not answered',
@@ -210,7 +213,7 @@ async function analyzeWithKimi(extraction, body, dryRun) {
       ],
     };
   }
-  
+
   const prompt = `You are an expert peptide research content editor for Ride The Tide, a South African peptide research community blog.
 
 Analyze this article for content gaps, outdated information, and voice compliance issues.
@@ -242,49 +245,28 @@ Return ONLY a JSON object with this structure:
 }`;
 
   try {
-    const response = await fetch(`${KIMI_BASE_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${KIMI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: KIMI_MODEL,
-        messages: [{ role: 'user', content: prompt }],
-        temperature: 0.3,
-        max_tokens: 2000,
-      }),
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Kimi API error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || '';
-    
-    // Extract JSON from response
-    const jsonMatch = content.match(/\{[\s\S]*\}/);
-    if (jsonMatch) {
-      const parsed = JSON.parse(jsonMatch[0]);
+    const content = await callAI(prompt, { temperature: 0.3, maxTokens: 2000 });
+    const parsed = extractJsonFromResponse(content);
+
+    if (parsed) {
       return {
-        status: 'analyzed_by_kimi',
+        status: 'analyzed_by_ai',
         suggestedUpdates: parsed.suggestedUpdates || [],
         voiceCompliance: parsed.voiceCompliance || {},
         priority: parsed.priority || 'medium',
         rawAnalysis: content,
       };
     }
-    
+
     return {
-      status: 'analyzed_by_kimi',
-      suggestedUpdates: ['Kimi analysis completed but JSON parsing failed — review raw output'],
+      status: 'analyzed_by_ai',
+      suggestedUpdates: ['AI analysis completed but JSON parsing failed — review raw output'],
       rawAnalysis: content,
     };
   } catch (e) {
-    console.log(`   ⚠️  Kimi analysis failed: ${e.message}`);
+    console.log(`   ⚠️  AI analysis failed: ${e.message}`);
     return {
-      status: 'kimi_error',
+      status: 'ai_error',
       note: e.message,
       suggestedUpdates: [],
     };

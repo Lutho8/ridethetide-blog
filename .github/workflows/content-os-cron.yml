@@ -104,6 +104,9 @@ jobs:
       - name: Create .env
         run: |
           cat > .env <<EOF
+          KIMI_API_KEY=${{ secrets.KIMI_API_KEY }}
+          KIMI_BASE_URL=${{ secrets.KIMI_BASE_URL || 'https://api.moonshot.cn/v1' }}
+          KIMI_MODEL=${{ secrets.KIMI_MODEL || 'moonshot-v1-32k' }}
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
           OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
@@ -153,6 +156,9 @@ jobs:
       - name: Create .env
         run: |
           cat > .env <<EOF
+          KIMI_API_KEY=${{ secrets.KIMI_API_KEY }}
+          KIMI_BASE_URL=${{ secrets.KIMI_BASE_URL || 'https://api.moonshot.cn/v1' }}
+          KIMI_MODEL=${{ secrets.KIMI_MODEL || 'moonshot-v1-32k' }}
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
           OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
@@ -211,6 +217,9 @@ jobs:
       - name: Create .env
         run: |
           cat > .env <<EOF
+          KIMI_API_KEY=${{ secrets.KIMI_API_KEY }}
+          KIMI_BASE_URL=${{ secrets.KIMI_BASE_URL || 'https://api.moonshot.cn/v1' }}
+          KIMI_MODEL=${{ secrets.KIMI_MODEL || 'moonshot-v1-32k' }}
           OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
           OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
