@@ -238,7 +238,7 @@ Lyophilized (powder): frozen (-20°C) for long-term storage. Reconstituted: refr
 
 ## Related Research
 
-- [TB-500 Complete Guide](/blog/tb-500-guide)
-- [BPC-157 + TB-500 Stack Protocol](/blog/healing-stack-protocol)
-- [Peptide Reconstitution Guide](/guides/reconstitution)
-- [South African Peptide Regulations](/blog/sahpra-peptide-regulations)
+- [TB-500 Complete Guide](/blog/tb-500-guide/)
+- [BPC-157 + TB-500 Stack Protocol](/blog/bpc-157-guide/)
+- [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
+- [South African Peptide Regulations](/blog/sahpra-peptide-regulations/)

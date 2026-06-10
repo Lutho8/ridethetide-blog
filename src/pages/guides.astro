@@ -16,15 +16,7 @@ const guides = [
     category: 'Research Methods',
     description: 'Subcutaneous, intramuscular, and intranasal administration. Needle selection, site rotation, and safety protocols.',
     level: 'Beginner',
-    time: '10 min read',
-  },
-  {
-    title: 'Peptide Storage and Stability',
-    slug: 'storage-stability',
-    category: 'Research Methods',
-    description: 'How to store lyophilized and reconstituted peptides. Temperature, light, and shelf-life considerations.',
-    level: 'Beginner',
-    time: '6 min read',
+    time: '12 min read',
   },
   {
     title: 'Bloodwork Before, During, and After Peptide Protocols',
@@ -32,15 +24,23 @@ const guides = [
     category: 'Safety & Science',
     description: 'What to test, when to test, and how to interpret results. Complete panel recommendations for SA researchers.',
     level: 'Intermediate',
+    time: '14 min read',
+  },
+  {
+    title: 'The Complete BPC-157 Guide',
+    slug: 'bpc-157-guide',
+    category: 'Peptide Deep Dives',
+    description: 'Mechanism of action, dosing protocols, cycling strategies, and South African sourcing considerations.',
+    level: 'Intermediate',
     time: '12 min read',
   },
   {
-    title: 'The Healing Stack: BPC-157 + TB-500 Protocol',
-    slug: 'healing-stack',
-    category: 'Protocol Guides',
-    description: 'Complete 6-week protocol for injury recovery. Dosing, timing, cycling, and expected outcomes.',
+    title: 'TB-500 Complete Guide',
+    slug: 'tb-500-guide',
+    category: 'Peptide Deep Dives',
+    description: 'Actin regulation, wound healing, cardiac repair, dosing protocols, and South African sourcing.',
     level: 'Intermediate',
-    time: '10 min read',
+    time: '12 min read',
   },
   {
     title: 'CJC-1295 + Ipamorelin: The Growth Hormone Stack',
@@ -48,21 +48,45 @@ const guides = [
     category: 'Protocol Guides',
     description: 'Synergistic GH secretagogue protocol. Dosing schedules, timing, and bloodwork monitoring.',
     level: 'Intermediate',
-    time: '12 min read',
+    time: '15 min read',
   },
   {
-    title: 'Fat Loss Protocol: Semaglutide, Tirzepatide, and Retatrutide',
-    slug: 'glp1-fat-loss',
-    category: 'Protocol Guides',
-    description: 'GLP-1 receptor agonist comparison and protocol design. Dosing escalation, side effect management, and maintenance.',
+    title: 'Fat Loss Protocol: A 6-Week Case Study',
+    slug: 'fat-loss-protocol-case-study',
+    category: 'Case Studies',
+    description: 'Data-driven first-person account using CJC-1295, Ipamorelin, and lifestyle modifications.',
     level: 'Advanced',
     time: '15 min read',
   },
   {
+    title: 'GLP-1 Comparison: Semaglutide vs Tirzepatide vs Retatrutide',
+    slug: 'glp1-comparison',
+    category: 'Peptide Deep Dives',
+    description: 'Head-to-head comparison of mechanisms, efficacy, side effects, dosing, and SA availability.',
+    level: 'Advanced',
+    time: '18 min read',
+  },
+  {
+    title: 'GHK-Cu Complete Guide',
+    slug: 'ghk-cu-guide',
+    category: 'Peptide Deep Dives',
+    description: 'Gene expression modulation, collagen synthesis, wound healing, anti-aging, hair growth, and dosing.',
+    level: 'Intermediate',
+    time: '12 min read',
+  },
+  {
     title: 'South African Peptide Sourcing Guide',
-    slug: 'sa-sourcing',
+    slug: 'sa-peptide-sourcing',
     category: 'South African Context',
-    description: 'Local suppliers, international import, customs considerations, and quality verification for SA researchers.',
+    description: 'Local suppliers, international import, customs, quality verification, and price comparisons in ZAR.',
+    level: 'Beginner',
+    time: '15 min read',
+  },
+  {
+    title: 'SAHPRA Peptide Regulations Explained',
+    slug: 'sahpra-peptide-regulations',
+    category: 'South African Context',
+    description: 'SAHPRA scheduling, import regulations, and what "for research purposes" means in South Africa.',
     level: 'Beginner',
     time: '10 min read',
   },
@@ -92,7 +116,7 @@ const guides = [
               }`}>{guide.level}</span>
             </div>
             <h2 class="text-xl font-bold text-slate-900 mb-2">
-              <a href={`/guides/${guide.slug}`} class="hover:text-teal-600 transition">
+              <a href={`/blog/${guide.slug}/`} class="hover:text-teal-600 transition">
                 {guide.title}
               </a>
             </h2>

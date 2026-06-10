@@ -425,9 +425,9 @@ Peptides themselves exist in a regulatory grey area in South Africa. They are no
 
 ## Related Research
 
-- [Peptide Reconstitution: The Math Nobody Teaches You](/blog/reconstitution-guide)
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [TB-500 Complete Guide](/blog/tb-500-guide)
-- [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack)
-- [South African Peptide Regulations](/blog/sahpra-peptide-regulations)
-- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study)
+- [Peptide Reconstitution: The Math Nobody Teaches You](/blog/reconstitution-guide/)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [TB-500 Complete Guide](/blog/tb-500-guide/)
+- [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack/)
+- [South African Peptide Regulations](/blog/sahpra-peptide-regulations/)
+- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study/)

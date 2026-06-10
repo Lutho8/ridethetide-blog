@@ -370,11 +370,11 @@ Standard sports drug screens (WADA, SAIDS) do not typically test for TB-500, but
 
 ## Related Articles
 
-- [BPC-157 Complete Guide: Healing, Dosing, and Stacks](/blog/bpc-157-guide)
-- [Peptide Reconstitution 101: A South African Researcher's Manual](/blog/peptide-reconstitution-guide)
-- [Understanding SAHPRA and Peptide Regulation in South Africa](/blog/sahpra-peptide-regulation)
-- [The TB-500 + BPC-157 Stack: Synergy or Hype?](/blog/tb500-bpc157-stack)
-- [Peptide Sourcing in South Africa: Red Flags and Quality Checks](/blog/peptide-sourcing-south-africa)
+- [BPC-157 Complete Guide: Healing, Dosing, and Stacks](/blog/bpc-157-guide/)
+- [Peptide Reconstitution 101: A South African Researcher's Manual](/blog/reconstitution-guide/)
+- [Understanding SAHPRA and Peptide Regulation in South Africa](/blog/sahpra-peptide-regulations/)
+- [The TB-500 + BPC-157 Stack: Synergy or Hype?](/blog/tb-500-guide/)
+- [Peptide Sourcing in South Africa: Red Flags and Quality Checks](/blog/sa-peptide-sourcing/)
 
 ---
 

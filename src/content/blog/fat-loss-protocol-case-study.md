@@ -350,7 +350,7 @@ CJC-1295 with DAC creates a constant GH elevation (like HGH therapy), which can 
 
 ## Related Research
 
-- [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack)
-- [Peptide Reconstitution Guide](/blog/reconstitution-guide)
-- [South African Sourcing Guide](/blog/sa-peptide-sourcing)
+- [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack/)
+- [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
+- [South African Sourcing Guide](/blog/sa-peptide-sourcing/)
 - [Get Your Personalized Protocol](https://ridethetide.site/quiz)

@@ -383,7 +383,7 @@ Do not double up. Resume your normal schedule at the next planned injection. Con
 
 ## Related Research
 
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [Peptide Reconstitution Guide](/blog/reconstitution-guide)
-- [South African Peptide Regulations](/blog/sahpra-peptide-regulations)
-- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
+- [South African Peptide Regulations](/blog/sahpra-peptide-regulations/)
+- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study/)

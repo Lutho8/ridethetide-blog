@@ -244,7 +244,7 @@ For unscheduled substances in personal-use quantities, legal consequences are mi
 
 ## Related Research
 
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [Peptide Reconstitution Guide](/blog/reconstitution-guide)
-- [South African Sourcing Guide](/blog/sa-peptide-sourcing)
-- [Peptide Storage and Stability](/guides/storage)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
+- [South African Sourcing Guide](/blog/sa-peptide-sourcing/)
+- [Peptide Storage and Stability](/blog/reconstitution-guide/)

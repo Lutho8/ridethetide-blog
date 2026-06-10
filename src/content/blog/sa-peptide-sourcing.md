@@ -436,10 +436,10 @@ If you are new to peptide research in South Africa, follow this phased approach 
 
 ### Phase 1: Education (1–2 weeks)
 
-1. Read our [SAHPRA Peptide Regulations](/blog/sahpra-peptide-regulations) guide
+1. Read our [SAHPRA Peptide Regulations](/blog/sahpra-peptide-regulations/) guide
 2. Join reputable online communities (Reddit r/Peptides, research forums) and read for at least a week before posting
 3. Identify 2–3 compounds relevant to your research goals
-4. Learn reconstitution and storage basics from our [Reconstitution Guide](/blog/reconstitution-guide)
+4. Learn reconstitution and storage basics from our [Reconstitution Guide](/blog/reconstitution-guide/)
 
 ### Phase 2: Supplier Vetting (1 week)
 
@@ -519,9 +519,9 @@ Neither is inherently safe. Gym dealers are often Tier 2 or 3 resellers with no 
 
 ## Related Research
 
-- [SAHPRA Peptide Regulations Explained](/blog/sahpra-peptide-regulations)
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [TB-500 Complete Guide](/blog/tb-500-guide)
-- [Peptide Reconstitution Guide](/blog/reconstitution-guide)
-- [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack)
-- [GLP-1 Comparison for South African Researchers](/blog/glp1-comparison)
+- [SAHPRA Peptide Regulations Explained](/blog/sahpra-peptide-regulations/)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [TB-500 Complete Guide](/blog/tb-500-guide/)
+- [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
+- [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack/)
+- [GLP-1 Comparison for South African Researchers](/blog/glp1-comparison/)

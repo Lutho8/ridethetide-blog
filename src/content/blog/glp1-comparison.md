@@ -267,7 +267,7 @@ Cost is a decisive factor for South African patients and researchers. These are 
 
 ### The Compounding Reality
 
-In South Africa, some compounding pharmacies prepare semaglutide and tirzepatide formulations at lower cost (R3,000–R8,000/month). Quality is highly variable. Compounded products are not subject to SAHPRA batch testing, stability validation, or sterility assurance at the same standard as registered medicines. We have covered quality verification in our [SAHPRA regulations article](/blog/sahpra-peptide-regulations).
+In South Africa, some compounding pharmacies prepare semaglutide and tirzepatide formulations at lower cost (R3,000–R8,000/month). Quality is highly variable. Compounded products are not subject to SAHPRA batch testing, stability validation, or sterility assurance at the same standard as registered medicines. We have covered quality verification in our [SAHPRA regulations article](/blog/sahpra-peptide-regulations/).
 
 ---
 
@@ -302,7 +302,7 @@ South African law allows personal importation of unregistered medicines under ce
 - Commercial quantities (more than 3 months' supply) attract scrutiny
 - Compounded peptides shipped without temperature control may degrade in transit
 
-**Risk:** Importing unregistered medicines for personal use exists in a grey area. It is not explicitly prohibited for unscheduled substances, but it is not formally protected either. See our [SAHPRA regulations guide](/blog/sahpra-peptide-regulations) for a deeper analysis.
+**Risk:** Importing unregistered medicines for personal use exists in a grey area. It is not explicitly prohibited for unscheduled substances, but it is not formally protected either. See our [SAHPRA regulations guide](/blog/sahpra-peptide-regulations/) for a deeper analysis.
 
 ---
 
@@ -413,7 +413,7 @@ For South African researchers, the priority should be: understanding these agent
 
 ## Related Research
 
-- [SAHPRA Peptide Regulations Explained](/blog/sahpra-peptide-regulations)
-- [Peptide Reconstitution Guide](/guides/reconstitution)
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study)
+- [SAHPRA Peptide Regulations Explained](/blog/sahpra-peptide-regulations/)
+- [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study/)

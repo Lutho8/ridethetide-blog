@@ -244,7 +244,7 @@ Date | Time | Dose | Site | Notes
 
 ## Related Research
 
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [Injection Techniques for Peptides](/guides/injection)
-- [Peptide Storage and Stability](/guides/storage)
-- [South African Sourcing Guide](/blog/sa-peptide-sourcing)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [Injection Techniques for Peptides](/blog/injection-techniques/)
+- [Peptide Storage and Stability](/blog/reconstitution-guide/)
+- [South African Sourcing Guide](/blog/sa-peptide-sourcing/)

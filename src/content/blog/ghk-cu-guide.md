@@ -392,11 +392,11 @@ Standard drug tests do not screen for peptides. WADA has not specifically listed
 
 ## Related Articles
 
-- [BPC-157 Complete Guide: Healing, Dosing, and Stacks](/blog/bpc-157-guide)
-- [TB-500 Complete Guide: Mechanism, Dosing, and Cycling](/blog/tb-500-guide)
-- [Peptide Reconstitution 101: A South African Researcher's Manual](/blog/reconstitution-guide)
-- [Understanding SAHPRA and Peptide Regulation in South Africa](/blog/sahpra-peptide-regulations)
-- [The TB-500 + BPC-157 Stack: Synergy or Hype?](/blog/tb500-bpc157-stack)
+- [BPC-157 Complete Guide: Healing, Dosing, and Stacks](/blog/bpc-157-guide/)
+- [TB-500 Complete Guide: Mechanism, Dosing, and Cycling](/blog/tb-500-guide/)
+- [Peptide Reconstitution 101: A South African Researcher's Manual](/blog/reconstitution-guide/)
+- [Understanding SAHPRA and Peptide Regulation in South Africa](/blog/sahpra-peptide-regulations/)
+- [The TB-500 + BPC-157 Stack: Synergy or Hype?](/blog/tb-500-guide/)
 
 ---
 

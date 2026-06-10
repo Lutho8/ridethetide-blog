@@ -396,9 +396,9 @@ Do not waste your money. These tests lack scientific validity, standardised refe
 
 ## Related Research
 
-- [CJC-1295 + Ipamorelin Stack Guide](/blog/cjc-ipamorelin-stack)
-- [Semaglutide vs Tirzepatide vs Retatrutide](/blog/glp1-comparison)
-- [BPC-157 Complete Guide](/blog/bpc-157-guide)
-- [TB-500 Complete Guide](/blog/tb-500-guide)
-- [SAHPRA Peptide Regulations Explained](/blog/sahpra-peptide-regulations)
-- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study)
+- [CJC-1295 + Ipamorelin Stack Guide](/blog/cjc-ipamorelin-stack/)
+- [Semaglutide vs Tirzepatide vs Retatrutide](/blog/glp1-comparison/)
+- [BPC-157 Complete Guide](/blog/bpc-157-guide/)
+- [TB-500 Complete Guide](/blog/tb-500-guide/)
+- [SAHPRA Peptide Regulations Explained](/blog/sahpra-peptide-regulations/)
+- [Fat Loss Protocol Case Study](/blog/fat-loss-protocol-case-study/)
