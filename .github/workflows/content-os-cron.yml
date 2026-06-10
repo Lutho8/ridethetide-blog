@@ -1,0 +1,238 @@
+name: Content OS — Automated Pipeline
+
+on:
+  schedule:
+    # Daily at 06:00 UTC
+    - cron: '0 6 * * *'
+    # Weekly on Sunday at 06:00 UTC
+    - cron: '0 6 * * 0'
+    # Monthly on the 1st at 06:00 UTC
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      pipeline:
+        description: 'Pipeline to run'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - daily
+          - weekly
+          - monthly
+          - full
+
+jobs:
+  # ─── Determine which jobs to run ───
+  decide:
+    runs-on: ubuntu-latest
+    outputs:
+      run_daily: ${{ steps.decide.outputs.run_daily }}
+      run_weekly: ${{ steps.decide.outputs.run_weekly }}
+      run_monthly: ${{ steps.decide.outputs.run_monthly }}
+    steps:
+      - name: Decide pipeline
+        id: decide
+        run: |
+          INPUT="${{ github.event.inputs.pipeline }}"
+          CRON="${{ github.event.schedule }}"
+
+          # Default: run nothing
+          DAILY="false"
+          WEEKLY="false"
+          MONTHLY="false"
+
+          if [ "$INPUT" = "daily" ] || [ "$INPUT" = "full" ]; then
+            DAILY="true"
+          fi
+          if [ "$INPUT" = "weekly" ] || [ "$INPUT" = "full" ]; then
+            WEEKLY="true"
+          fi
+          if [ "$INPUT" = "monthly" ] || [ "$INPUT" = "full" ]; then
+            MONTHLY="true"
+          fi
+
+          # Auto-detect from cron trigger
+          if [ "$INPUT" = "auto" ] || [ -z "$INPUT" ]; then
+            DOW=$(date +%u)      # 1=Mon … 7=Sun
+            DOM=$(date +%d)      # 01-31
+            MIN=$(date +%M)
+            HOUR=$(date +%H)
+
+            # Daily runs every day at 06:00
+            if [ "$HOUR" = "06" ] && [ "$MIN" = "00" ]; then
+              DAILY="true"
+            fi
+
+            # Weekly runs on Sunday (day-of-week = 0 in cron, but %u gives 7)
+            if [ "$DOW" = "7" ] && [ "$HOUR" = "06" ] && [ "$MIN" = "00" ]; then
+              WEEKLY="true"
+            fi
+
+            # Monthly runs on the 1st
+            if [ "$DOM" = "01" ] && [ "$HOUR" = "06" ] && [ "$MIN" = "00" ]; then
+              MONTHLY="true"
+            fi
+          fi
+
+          echo "run_daily=$DAILY" >> $GITHUB_OUTPUT
+          echo "run_weekly=$WEEKLY" >> $GITHUB_OUTPUT
+          echo "run_monthly=$MONTHLY" >> $GITHUB_OUTPUT
+
+          echo "Daily: $DAILY | Weekly: $WEEKLY | Monthly: $MONTHLY"
+
+  # ─── Daily Pipeline ───
+  daily:
+    needs: decide
+    if: needs.decide.outputs.run_daily == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env
+        run: |
+          cat > .env <<EOF
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
+          OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
+          GSC_CLIENT_ID=${{ secrets.GSC_CLIENT_ID }}
+          GSC_CLIENT_SECRET=${{ secrets.GSC_CLIENT_SECRET }}
+          GSC_REFRESH_TOKEN=${{ secrets.GSC_REFRESH_TOKEN }}
+          GSC_SITE_URL=${{ secrets.GSC_SITE_URL || 'https://www.ridethetide.site/' }}
+          SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
+          EOF
+
+      - name: Run firehose digest
+        run: node scripts/firehose-digest.cjs
+        continue-on-error: true
+
+      - name: Run article refresh (dry-run)
+        run: node scripts/refresh-articles.cjs --dry-run --top=1
+        continue-on-error: true
+
+      - name: Commit daily reports
+        run: |
+          git config user.name "Content OS Bot"
+          git config user.email "bot@ridethetide.site"
+          git add content-os/reports/ content-os/drafts/ || true
+          git diff --cached --quiet || git commit -m "chore: daily firehose + refresh reports [bot]"
+          git push || true
+
+  # ─── Weekly Pipeline ───
+  weekly:
+    needs: decide
+    if: needs.decide.outputs.run_weekly == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env
+        run: |
+          cat > .env <<EOF
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
+          OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
+          GSC_CLIENT_ID=${{ secrets.GSC_CLIENT_ID }}
+          GSC_CLIENT_SECRET=${{ secrets.GSC_CLIENT_SECRET }}
+          GSC_REFRESH_TOKEN=${{ secrets.GSC_REFRESH_TOKEN }}
+          GSC_SITE_URL=${{ secrets.GSC_SITE_URL || 'https://www.ridethetide.site/' }}
+          AHREFS_API_TOKEN=${{ secrets.AHREFS_API_TOKEN }}
+          SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
+          EOF
+
+      - name: Run content audit
+        run: node scripts/content-audit.cjs
+        continue-on-error: true
+
+      - name: Run traffic decay
+        run: node scripts/traffic-decay.cjs --days 90 --threshold -20
+        continue-on-error: true
+
+      - name: Run indexing audit
+        run: node scripts/indexing-audit.cjs
+        continue-on-error: true
+
+      - name: Run gap analysis
+        run: node scripts/gap-analysis.cjs
+        continue-on-error: true
+
+      - name: Commit weekly reports
+        run: |
+          git config user.name "Content OS Bot"
+          git config user.email "bot@ridethetide.site"
+          git add content-os/ || true
+          git diff --cached --quiet || git commit -m "chore: weekly audit + decay + indexing reports [bot]"
+          git push || true
+
+  # ─── Monthly Pipeline ───
+  monthly:
+    needs: decide
+    if: needs.decide.outputs.run_monthly == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create .env
+        run: |
+          cat > .env <<EOF
+          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL=${{ secrets.OPENAI_BASE_URL || 'https://api.openai.com/v1' }}
+          OPENAI_MODEL=${{ secrets.OPENAI_MODEL || 'gpt-4o-mini' }}
+          GSC_CLIENT_ID=${{ secrets.GSC_CLIENT_ID }}
+          GSC_CLIENT_SECRET=${{ secrets.GSC_CLIENT_SECRET }}
+          GSC_REFRESH_TOKEN=${{ secrets.GSC_REFRESH_TOKEN }}
+          GSC_SITE_URL=${{ secrets.GSC_SITE_URL || 'https://www.ridethetide.site/' }}
+          SLACK_BOT_TOKEN=${{ secrets.SLACK_BOT_TOKEN }}
+          EOF
+
+      - name: Build embeddings
+        run: node scripts/build-embeddings.cjs
+        continue-on-error: true
+
+      - name: Run topic drift
+        run: node scripts/topic-drift.cjs
+        continue-on-error: true
+
+      - name: Commit monthly reports
+        run: |
+          git config user.name "Content OS Bot"
+          git config user.email "bot@ridethetide.site"
+          git add content-os/ || true
+          git diff --cached --quiet || git commit -m "chore: monthly embeddings + topic drift [bot]"
+          git push || true
