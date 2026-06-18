@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/post-build-sitemap.cjs",
     "preview": "astro preview",
     "astro": "astro",
     "content:seed": "node scripts/seed-topics.cjs",
