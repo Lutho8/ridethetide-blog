@@ -22,7 +22,7 @@ const CONFIG = {
     'science.bio',
     'cosmicnootropic.com',
   ],
-  emailTo: process.env.FIREHOSE_EMAIL || 'lutho@ridethetide.site',
+  emailTo: process.env.FIREHOSE_EMAIL || 'lutho@peptide-south-africa.com',
 };
 
 if (!fs.existsSync(CONFIG.outputDir)) {
@@ -168,7 +168,7 @@ function generateManualDigest() {
 function generateEmailMarkdown(digest) {
   const content = digest.manualContent;
   
-  return `# 📰 Ride The Tide — Daily Firehose Digest
+  return `# 📰 Peptide South Africa — Daily Firehose Digest
 
 **${digest.date}** | Your daily intelligence briefing on peptide research, competitor moves, and industry news.
 
@@ -229,7 +229,7 @@ ${content.researchUpdates.map(r => `
 
 ---
 
-*This digest is generated automatically by the Ride The Tide Content OS.*
+*This digest is generated automatically by the Peptide South Africa Content OS.*
 *To configure: edit scripts/firehose-digest.js*
 *Questions? Reply to this email or check the Content OS dashboard.*
 `;
@@ -243,7 +243,7 @@ function generateEmailHtml(digest) {
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Ride The Tide Daily Digest</title>
+  <title>Peptide South Africa Daily Digest</title>
   <style>
     body { font-family: -apple-system, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #334155; }
     h1 { color: #0f172a; border-bottom: 2px solid #14b8a6; padding-bottom: 10px; }
@@ -258,7 +258,7 @@ function generateEmailHtml(digest) {
   </style>
 </head>
 <body>
-  <h1>📰 Ride The Tide — Daily Digest</h1>
+  <h1>📰 Peptide South Africa — Daily Digest</h1>
   <p><strong>${digest.date}</strong> | Your daily intelligence briefing</p>
   <hr>
   <p><em>HTML version coming soon. Use markdown version for now.</em></p>

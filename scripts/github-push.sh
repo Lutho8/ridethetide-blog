@@ -39,7 +39,7 @@ if [ "$REPO_EXISTS" = "404" ]; then
     curl -s -X POST -H "Authorization: token $GITHUB_TOKEN" \
          -H "Accept: application/vnd.github.v3+json" \
          https://api.github.com/user/repos \
-         -d '{"name":"ridethetide-blog","description":"Ride The Tide - AI-Native Content OS Blog","private":false}' > /dev/null
+         -d '{"name":"peptide-south-africa-blog","description":"Peptide South Africa - AI-Native Content OS Blog","private":false}' > /dev/null
     echo "   ✅ Repo created"
 elif [ "$REPO_EXISTS" = "200" ]; then
     echo "   ✅ Repo already exists"

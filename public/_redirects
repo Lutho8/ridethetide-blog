@@ -1,0 +1,26 @@
+# Blog subdomain redirects
+# blog.ridethetide.site → peptide-south-africa.com/blog
+# IMPORTANT: Only deploy this _redirects file to the OLD domain (blog.ridethetide.site).
+# Do NOT deploy it to peptide-south-africa.com — it will redirect the homepage and sitemap.
+
+# Passthrough: sitemap and robots must be served, not redirected
+/robots.txt /robots.txt 200
+/sitemap-index.xml /sitemap-index.xml 200
+/sitemap-0.xml /sitemap-0.xml 200
+/sitemap.xml /sitemap.xml 200
+
+# Homepage → /blog/
+/ https://peptide-south-africa.com/blog/ 301
+
+# RSS feed
+/rss.xml https://peptide-south-africa.com/blog/rss.xml 301
+
+# Peptide database on blog subdomain
+/peptides https://peptide-south-africa.com/peptides 301
+/peptides/* https://peptide-south-africa.com/peptides/:splat 301
+
+# Blog articles (already under /blog/)
+/blog/* https://peptide-south-africa.com/blog/:splat 301
+
+# Catch-all
+/* https://peptide-south-africa.com/blog/:splat 301

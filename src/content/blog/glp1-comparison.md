@@ -8,7 +8,7 @@ categoryId: "peptide-deep-dives"
 peptides: "Semaglutide, Tirzepatide, Retatrutide"
 tags: "Semaglutide, Tirzepatide, Retatrutide, GLP-1, GIP, weight loss, fat loss, comparison, South Africa"
 featured: true
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "18 min read"
 heroImage: "/images/glp1-comparison.svg"
 faqs:

@@ -172,6 +172,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: any
 } & { render(): Render[".md"] };
+"complete-peptide-guide-sa.md": {
+	id: "complete-peptide-guide-sa.md";
+  slug: "complete-peptide-guide-sa";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
 "fat-loss-protocol-case-study.md": {
 	id: "fat-loss-protocol-case-study.md";
   slug: "fat-loss-protocol-case-study";
@@ -200,6 +207,27 @@ declare module 'astro:content' {
   collection: "blog";
   data: any
 } & { render(): Render[".md"] };
+"ozempic-vs-mounjaro-vs-saxenda.md": {
+	id: "ozempic-vs-mounjaro-vs-saxenda.md";
+  slug: "ozempic-vs-mounjaro-vs-saxenda";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
+"peptide-prescription-online-sa.md": {
+	id: "peptide-prescription-online-sa.md";
+  slug: "peptide-prescription-online-sa";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
+"peptide-therapy-cape-town.md": {
+	id: "peptide-therapy-cape-town.md";
+  slug: "peptide-therapy-cape-town";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
 "reconstitution-guide.md": {
 	id: "reconstitution-guide.md";
   slug: "reconstitution-guide";
@@ -210,6 +238,13 @@ declare module 'astro:content' {
 "sa-peptide-sourcing.md": {
 	id: "sa-peptide-sourcing.md";
   slug: "sa-peptide-sourcing";
+  body: string;
+  collection: "blog";
+  data: any
+} & { render(): Render[".md"] };
+"sahpra-crackdown-2026.md": {
+	id: "sahpra-crackdown-2026.md";
+  slug: "sahpra-crackdown-2026";
   body: string;
   collection: "blog";
   data: any

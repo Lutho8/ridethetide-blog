@@ -8,7 +8,7 @@ categoryId: "protocol-guides"
 peptides: "CJC-1295, Ipamorelin"
 tags: "CJC-1295, Ipamorelin, GH stack, growth hormone, secretagogue, dosing, protocol, South Africa"
 featured: true
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "15 min read"
 heroImage: "/images/cjc-ipamorelin-stack.svg"
 faqs:

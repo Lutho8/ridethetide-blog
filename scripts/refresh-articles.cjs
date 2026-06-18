@@ -214,7 +214,7 @@ async function analyzeWithAI(extraction, body, dryRun) {
     };
   }
 
-  const prompt = `You are an expert peptide research content editor for Ride The Tide, a South African peptide research community blog.
+  const prompt = `You are an expert peptide research content editor for Peptide South Africa, a South African peptide research community blog.
 
 Analyze this article for content gaps, outdated information, and voice compliance issues.
 

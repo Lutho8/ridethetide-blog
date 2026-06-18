@@ -187,10 +187,10 @@ ${report.driftedArticles.length > 0 ? `
 2. **Update internal links** — New articles may need links from drifted content
 3. **Refresh outdated content** — Drift may indicate stale information
 4. **Check search performance** — Drifted articles may have ranking changes
-` : '
+` : `
 1. **Continue monitoring** — No drift detected, schedule next check in 30 days
 2. **Publish new content** — Add articles to grow topical authority
-'}
+`}
 
 ---
 

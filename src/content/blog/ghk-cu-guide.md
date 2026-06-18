@@ -8,7 +8,7 @@ categoryId: "peptide-deep-dives"
 peptides: "GHK-Cu"
 tags: "GHK-Cu, copper peptide, skin, hair, collagen, anti-aging, wound healing, dosing, South Africa"
 featured: false
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "12 min read"
 heroImage: "/images/ghk-cu-guide.svg"
 faqs:
@@ -20,7 +20,7 @@ faqs:
     answer: "Generally yes, but always consult a healthcare professional. Common stacks include BPC-157 (healing) and TB-500 (recovery). No known dangerous interactions in research contexts."
 ---
 
-**Medical Disclaimer:** The information in this article is for educational and research purposes only. GHK-Cu (glycyl-L-histidyl-L-lysine copper complex) is not approved by the South African Health Products Regulatory Authority (SAHPRA) for human use. This peptide is intended for laboratory research. Self-administration carries unknown risks, including copper toxicity and potential allergic reactions. Always consult a qualified healthcare professional before considering any peptide. This is not medical advice, and Ride The Tide does not condone illegal or unsafe use.
+**Medical Disclaimer:** The information in this article is for educational and research purposes only. GHK-Cu (glycyl-L-histidyl-L-lysine copper complex) is not approved by the South African Health Products Regulatory Authority (SAHPRA) for human use. This peptide is intended for laboratory research. Self-administration carries unknown risks, including copper toxicity and potential allergic reactions. Always consult a qualified healthcare professional before considering any peptide. This is not medical advice, and Peptide South Africa does not condone illegal or unsafe use.
 
 ---
 

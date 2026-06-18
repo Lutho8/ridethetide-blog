@@ -8,7 +8,7 @@ categoryId: "peptide-deep-dives"
 peptides: "TB-500"
 tags: "TB-500, Thymosin Beta-4, healing, recovery, actin, cardiac, dosing, South Africa"
 featured: false
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "12 min read"
 heroImage: "/images/tb-500-guide.svg"
 faqs:
@@ -20,7 +20,7 @@ faqs:
     answer: "Loading phase: 2-2.5 mg twice weekly for 4 weeks. Maintenance: 2-2.5 mg once weekly for 4-6 weeks. Subcutaneous or intramuscular injection."
 ---
 
-**Medical Disclaimer:** The information in this article is for educational and research purposes only. TB-500 (Thymosin Beta-4) is not approved by the South African Health Products Regulatory Authority (SAHPRA) for human use. This peptide is intended for laboratory research. Self-administration carries unknown risks. Always consult a qualified healthcare professional before considering any peptide. This is not medical advice, and Ride The Tide does not condone illegal or unsafe use.
+**Medical Disclaimer:** The information in this article is for educational and research purposes only. TB-500 (Thymosin Beta-4) is not approved by the South African Health Products Regulatory Authority (SAHPRA) for human use. This peptide is intended for laboratory research. Self-administration carries unknown risks. Always consult a qualified healthcare professional before considering any peptide. This is not medical advice, and Peptide South Africa does not condone illegal or unsafe use.
 
 ---
 

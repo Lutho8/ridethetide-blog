@@ -1,8 +1,8 @@
 #!/bin/bash
-# Quick MCP Setup Script for Ride The Tide Content OS
+# Quick MCP Setup Script for Peptide South Africa Content OS
 # Run this after filling in your API keys below
 
-echo "🔌 Ride The Tide — Quick MCP Setup"
+echo "🔌 Peptide South Africa — Quick MCP Setup"
 echo ""
 echo "This script will create your .env file and test connections."
 echo ""

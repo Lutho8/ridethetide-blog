@@ -1,4 +1,4 @@
-# Ride The Tide — Master Source of Truth
+# Peptide South Africa — Master Source of Truth
 
 > Last updated: 2026-06-08
 > Owner: Content OS / AI-Native Pipeline
@@ -8,7 +8,7 @@
 
 ## 1. Product Features & Use Cases
 
-### Core Product: Peptide Protocol Tracker (ridethetide.info)
+### Core Product: Peptide Protocol Tracker (app.peptide-south-africa.com)
 
 | Feature | Use Case | Target Audience | Pain Solved |
 |---------|----------|-----------------|-------------|
@@ -21,7 +21,7 @@
 | Stack builder | Combine peptides synergistically | Advanced researchers | Prevents dangerous interactions, optimizes timing |
 | Reconstitution calculator | BAC water mixing calculations | Beginners | Eliminates math errors in preparation |
 
-### Core Service: Personalized Protocol Coaching (ridethetide.site)
+### Core Service: Personalized Protocol Coaching (peptide-south-africa.com)
 
 | Feature | Use Case | Target Audience | Pain Solved |
 |---------|----------|-----------------|-------------|

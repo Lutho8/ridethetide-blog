@@ -1,7 +1,7 @@
 /**
  * Initialize Git Repository and Push to GitHub
  * 
- * Sets up the ridethetide-blog repo for GitHub + Cloudflare Pages deployment.
+ * Sets up the peptide-south-africa-blog repo for GitHub + Cloudflare Pages deployment.
  * 
  * Usage: node scripts/init-repo.js --github-user YOUR_USERNAME
  */
@@ -10,12 +10,12 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const REPO_NAME = 'ridethetide-blog';
+const REPO_NAME = 'peptide-south-africa-blog';
 
 function initRepo(options = {}) {
   const { githubUser } = options;
   
-  console.log('🚀 Initializing Ride The Tide Blog Repository\n');
+  console.log('🚀 Initializing Peptide South Africa Blog Repository\n');
   
   const blogDir = path.join(__dirname, '..');
   
@@ -111,12 +111,12 @@ content-os/seeds/*.json
   console.log('      - Build output directory: dist');
   console.log('   5. Add environment variables:');
   console.log('      - NODE_VERSION: 20');
-  console.log('   6. Add custom domain: blog.ridethetide.site');
+  console.log('   6. Add custom domain: peptide-south-africa.com');
   console.log('   7. Save & Deploy\n');
   
   // GitHub Secrets
   console.log('🔐 GitHub Secrets (for CI/CD)\n');
-  console.log('   Add these at: https://github.com/YOUR_USERNAME/ridethetide-blog/settings/secrets/actions');
+  console.log('   Add these at: https://github.com/YOUR_USERNAME/peptide-south-africa-blog/settings/secrets/actions');
   console.log('   - CLOUDFLARE_API_TOKEN (from https://dash.cloudflare.com/profile/api-tokens)');
   console.log('   - CLOUDFLARE_ACCOUNT_ID (from Cloudflare dashboard sidebar)\n');
   

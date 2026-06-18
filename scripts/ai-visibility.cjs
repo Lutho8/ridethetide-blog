@@ -4,14 +4,14 @@
  * Tracks brand mentions in AI search answers (ChatGPT, Perplexity, Claude).
  * Uses Brand Radar API or manual search queries.
  * 
- * Usage: node scripts/ai-visibility.js --brand "Ride The Tide"
+ * Usage: node scripts/ai-visibility.js --brand "Peptide South Africa"
  */
 
 const fs = require('fs');
 const path = require('path');
 
 const CONFIG = {
-  brand: 'Ride The Tide',
+  brand: 'Peptide South Africa',
   competitors: ['Peptide Sciences', 'Science.bio', 'Cosmic Nootropic'],
   queries: [
     'best peptides South Africa',
@@ -104,7 +104,7 @@ async function trackAiVisibility(options = {}) {
   console.log('\n📋 Manual Tracking Method:');
   console.log('   1. Open Perplexity.ai');
   console.log('   2. Search: "best peptides South Africa"');
-  console.log('   3. Check if Ride The Tide is cited');
+  console.log('   3. Check if Peptide South Africa is cited');
   console.log('   4. Repeat for each query in config');
   console.log('   5. Update this report manually until Brand Radar is connected');
 }
@@ -168,7 +168,7 @@ ${report.actions.map(a => `- [ ] ${a}`).join('\n')}
 
 ---
 
-*Run monthly via: node scripts/ai-visibility.js --brand "Ride The Tide"*
+*Run monthly via: node scripts/ai-visibility.js --brand "Peptide South Africa"*
 `;
 }
 

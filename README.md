@@ -1,4 +1,4 @@
-# Ride The Tide — AI-Native Content OS
+# Peptide South Africa — AI-Native Content OS
 
 > Fully AI-native blog and content operations platform.
 > Built with Astro, hosted on GitHub, deployed to Cloudflare Pages.
@@ -133,7 +133,7 @@ See `config/source-of-truth.md` for full voice guidelines.
 0 6 * * * cd /path/to/ridethetide-blog && node scripts/refresh-articles.cjs --top 3
 
 # Generate firehose digest
-0 7 * * * cd /path/to/ridethetide-blog && node scripts/firehose-digest.cjs --email lutho@ridethetide.site
+0 7 * * * cd /path/to/ridethetide-blog && node scripts/firehose-digest.cjs --email lutho@peptide-south-africa.com
 ```
 
 ### Weekly (Cron)
@@ -169,7 +169,7 @@ See `config/source-of-truth.md` for full voice guidelines.
 3. Set build command: `npm run build`
 4. Set build output directory: `dist`
 5. Add environment variables in Cloudflare dashboard
-6. Configure custom domain: `blog.ridethetide.site`
+6. Configure custom domain: `peptide-south-africa.com/blog`
 
 ### GitHub Actions
 
@@ -220,7 +220,7 @@ Features:
 
 ## 📄 License
 
-Proprietary — Ride The Tide Research.
+Proprietary — Peptide South Africa Research.
 
 ---
 

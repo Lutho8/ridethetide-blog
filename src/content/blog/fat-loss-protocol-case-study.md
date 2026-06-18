@@ -8,7 +8,7 @@ categoryId: "case-studies"
 peptides: "CJC-1295, Ipamorelin"
 tags: "fat loss, case study, CJC-1295, Ipamorelin, protocol, transformation"
 featured: true
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "15 min read"
 heroImage: "/images/fat-loss-protocol.svg"
 faqs:
@@ -353,4 +353,4 @@ CJC-1295 with DAC creates a constant GH elevation (like HGH therapy), which can 
 - [CJC-1295 + Ipamorelin Stack Protocol](/blog/cjc-ipamorelin-stack/)
 - [Peptide Reconstitution Guide](/blog/reconstitution-guide/)
 - [South African Sourcing Guide](/blog/sa-peptide-sourcing/)
-- [Get Your Personalized Protocol](https://ridethetide.site/quiz)
+- [Get Your Personalized Protocol](https://peptide-south-africa.com/quiz)

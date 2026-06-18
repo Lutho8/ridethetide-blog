@@ -8,7 +8,7 @@ categoryId: "south-africa"
 peptides: ""
 tags: "SAHPRA, South Africa, legal, regulations, import, research peptides"
 featured: false
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "10 min read"
 heroImage: "/images/sahpra-regulations.svg"
 faqs:

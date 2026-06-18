@@ -31,11 +31,11 @@ if (fs.existsSync(envPath)) {
 }
 
 const CONFIG = {
-  gscSite: process.env.GSC_SITE_URL || 'https://blog.ridethetide.site/',
+  gscSite: process.env.GSC_SITE_URL || 'https://peptide-south-africa.com/',
   sitemaps: [
-    'https://blog.ridethetide.site/sitemap-index.xml',
-    'https://www.ridethetide.info/sitemap.xml',
-    'https://ridethetide.site/sitemap.xml',
+    'https://peptide-south-africa.com/sitemap-index.xml',
+    'https://app.peptide-south-africa.com/sitemap.xml',
+    'https://peptide-south-africa.com/sitemap.xml',
   ],
   outputDir: path.join(__dirname, '../content-os/reports'),
 };
@@ -352,7 +352,7 @@ function generateTemplateReport() {
     })),
 
     recommendations: [
-      'Submit sitemap to GSC for blog.ridethetide.site',
+      'Submit sitemap to GSC for peptide-south-africa.com',
       'Request indexing for new articles immediately after publish',
       'Monitor "Discovered - not indexed" pages weekly',
     ],

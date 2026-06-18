@@ -21,7 +21,7 @@ function parseList(value) {
 
 const peptides = parseList(post.frontmatter.peptides);
 const tags = parseList(post.frontmatter.tags);
-const authorName = post.frontmatter.author || "Ride The Tide Research Team";
+const authorName = post.frontmatter.author || "Peptide South Africa Clinical Team";
 
 // Schema.org Article
 const articleSchema = {
@@ -29,20 +29,20 @@ const articleSchema = {
   "@type": "Article",
   "headline": post.frontmatter.title,
   "description": post.frontmatter.description,
-  "image": post.frontmatter.heroImage ? `https://blog.ridethetide.site${post.frontmatter.heroImage}` : undefined,
+  "image": post.frontmatter.heroImage ? `https://peptide-south-africa.com${post.frontmatter.heroImage}` : undefined,
   "datePublished": post.frontmatter.pubDate,
   "dateModified": post.frontmatter.updatedDate || post.frontmatter.pubDate,
   "author": {
     "@type": "Organization",
     "name": authorName,
-    "url": "https://ridethetide.site"
+    "url": "https://peptide-south-africa.com"
   },
   "publisher": {
     "@type": "Organization",
-    "name": "Ride The Tide",
+    "name": "Peptide South Africa",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://blog.ridethetide.site/favicon.svg"
+      "url": "https://peptide-south-africa.com/favicon.svg"
     }
   },
   "mainEntityOfPage": {
@@ -88,7 +88,7 @@ const medicalSchema = {
 ---
 
 <Layout 
-  title={`${post.frontmatter.title} | Ride The Tide Research`}
+  title={`${post.frontmatter.title} | Peptide South Africa Research`}
   description={post.frontmatter.description}
   image={post.frontmatter.heroImage}
 >
@@ -168,7 +168,7 @@ const medicalSchema = {
           This guide is a starting point. For a protocol tailored to your body, goals, and lifestyle, 
           take our 2-minute assessment.
         </p>
-        <a href="https://ridethetide.site/quiz" class="inline-block rounded-full bg-teal-600 px-6 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition">
+        <a href="https://peptide-south-africa.com/quiz" class="inline-block rounded-full bg-teal-600 px-6 py-2 text-sm font-semibold text-white hover:bg-teal-700 transition">
           Get Your Protocol →
         </a>
       </div>

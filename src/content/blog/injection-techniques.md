@@ -8,7 +8,7 @@ categoryId: "research-methods"
 peptides: "BPC-157, TB-500, CJC-1295, Ipamorelin, Semaglutide"
 tags: "injection, subcutaneous, intramuscular, intranasal, technique, safety, needles, South Africa"
 featured: false
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "12 min read"
 heroImage: "/images/injection-techniques.svg"
 faqs:

@@ -61,7 +61,7 @@ node scripts/gap-analysis.js --competitors "peptide-sciences.com,science.bio"
         "GSC_CLIENT_ID": "${GSC_CLIENT_ID}",
         "GSC_CLIENT_SECRET": "${GSC_CLIENT_SECRET}",
         "GSC_REFRESH_TOKEN": "${GSC_REFRESH_TOKEN}",
-        "GSC_SITE_URL": "https://blog.ridethetide.site/"
+        "GSC_SITE_URL": "https://www.peptide-south-africa.com/"
       }
     }
   }
@@ -245,7 +245,7 @@ node scripts/extract-language.js --source slack --channel customer-feedback --da
 **Usage in Content OS:**
 ```bash
 # AI visibility audit
-node scripts/ai-visibility.js --brand "Ride The Tide"
+node scripts/ai-visibility.js --brand "Peptide South Africa"
 ```
 
 ---
@@ -279,7 +279,7 @@ node scripts/ai-visibility.js --brand "Ride The Tide"
 **Usage in Content OS:**
 ```bash
 # Daily firehose digest
-node scripts/firehose-digest.js --email lutho@ridethetide.site
+node scripts/firehose-digest.js --email lutho@peptide-south-africa.com
 ```
 
 ---

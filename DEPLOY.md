@@ -1,4 +1,4 @@
-# 🚀 Go-Live Deployment Guide — Ride The Tide Content OS
+# 🚀 Go-Live Deployment Guide — Peptide South Africa Content OS
 
 > Complete step-by-step to take your blog from local repo to live site.
 > Estimated time: 30–45 minutes
@@ -103,14 +103,14 @@ Click **Save and Deploy**
 
 1. In Cloudflare Pages project → **Custom domains** tab
 2. Click **Set up a custom domain**
-3. Enter: `blog.ridethetide.site`
+3. Enter: `peptide-south-africa.com/blog`
 4. Click **Continue**
 
 ### Step 3.2 — DNS Configuration
 
 Cloudflare will show DNS records to add. If your domain is already on Cloudflare:
 
-1. Go to https://dash.cloudflare.com/ → select `ridethetide.site`
+1. Go to https://dash.cloudflare.com/ → select `peptide-south-africa.com`
 2. Go to **DNS** → **Records**
 3. Add a **CNAME** record:
    - Name: `blog`
@@ -121,7 +121,7 @@ Cloudflare will show DNS records to add. If your domain is already on Cloudflare
 ### Step 3.3 — Verify
 
 - Wait 2–5 minutes for DNS propagation
-- Visit https://blog.ridethetide.site
+- Visit https://peptide-south-africa.com/blog
 - Should show your blog with SSL certificate (green lock)
 
 ---
@@ -133,7 +133,7 @@ Cloudflare will show DNS records to add. If your domain is already on Cloudflare
 1. Go to https://search.google.com/search-console
 2. Click **Add property**
 3. Select **Domain** (recommended) or **URL prefix**
-4. Enter: `blog.ridethetide.site`
+4. Enter: `peptide-south-africa.com/blog`
 5. Click **Continue**
 
 ### Step 4.2 — Verify Ownership
@@ -146,7 +146,7 @@ Cloudflare will show DNS records to add. If your domain is already on Cloudflare
 
 **If using Domain (recommended):**
 - Add a **TXT record** in Cloudflare DNS:
-  - Name: `@` (or `ridethetide.site`)
+  - Name: `@` (or `peptide-south-africa.com`)
   - Content: the string Google provides (e.g., `google-site-verification=...`)
 - Save, wait 1–2 minutes, click **Verify**
 
@@ -260,7 +260,7 @@ Open http://localhost:3000 in your browser.
 |---|-------|-----|
 | 1 | GitHub repo has all files | https://github.com/Lutho8/ridethetide-blog |
 | 2 | Cloudflare Pages deployed | https://ridethetide-blog.pages.dev |
-| 3 | Custom domain works | https://blog.ridethetide.site |
+| 3 | Custom domain works | https://peptide-south-africa.com/blog |
 | 4 | SSL certificate active | Green lock in browser |
 | 5 | GSC property verified | https://search.google.com/search-console |
 | 6 | Sitemap submitted | GSC → Sitemaps → Status: Success |
@@ -274,11 +274,11 @@ Open http://localhost:3000 in your browser.
 ### Quick Smoke Test
 
 Visit these URLs and confirm they load:
-- https://blog.ridethetide.site/ (homepage)
-- https://blog.ridethetide.site/blog/ (blog index)
-- https://blog.ridethetide.site/blog/bpc-157-guide/ (article)
-- https://blog.ridethetide.site/peptides/ (peptide database)
-- https://blog.ridethetide.site/rss.xml (RSS feed)
+- https://peptide-south-africa.com/blog/ (homepage)
+- https://peptide-south-africa.com/blog/blog/ (blog index)
+- https://peptide-south-africa.com/blog/blog/bpc-157-guide/ (article)
+- https://peptide-south-africa.com/blog/peptides/ (peptide database)
+- https://peptide-south-africa.com/blog/rss.xml (RSS feed)
 
 ---
 
@@ -286,8 +286,8 @@ Visit these URLs and confirm they load:
 
 ### Immediate (This Week)
 
-- [ ] Share blog.ridethetide.site on social media
-- [ ] Add link from ridethetide.site and ridethetide.info to blog
+- [ ] Share peptide-south-africa.com/blog on social media
+- [ ] Add link from peptide-south-africa.com and app.peptide-south-africa.com to blog
 - [ ] Submit sitemap to Bing Webmaster Tools (https://www.bing.com/webmasters)
 - [ ] Set up Google Analytics 4 (optional but recommended)
 
@@ -353,7 +353,7 @@ Visit these URLs and confirm they load:
 ## Support & Next Steps
 
 - **GitHub repo:** https://github.com/Lutho8/ridethetide-blog
-- **Live site:** https://blog.ridethetide.site
+- **Live site:** https://peptide-south-africa.com/blog
 - **Dashboard:** `npm run os:serve` → http://localhost:3000
 - **Content OS docs:** `README.md` in repo root
 
@@ -368,4 +368,4 @@ Your only ongoing manual work: review drafts, approve content, and write new art
 ---
 
 *Generated: 2026-06-08*
-*Content OS v1.0 — Ride The Tide Research*
+*Content OS v1.0 — Peptide South Africa Research*

@@ -127,11 +127,11 @@ function serveApiRun(req, res, url) {
   
   // Run the command asynchronously
   const scriptMap = {
-    'content:audit': 'node scripts/content-audit.js',
-    'content:gap': 'node scripts/gap-analysis.js',
-    'embeddings:build': 'node scripts/build-embeddings.js',
-    'embeddings:drift': 'node scripts/topic-drift.js',
-    'content:refresh': 'node scripts/refresh-articles.js --dry-run',
+    'content:audit': 'node scripts/content-audit.cjs',
+    'content:gap': 'node scripts/gap-analysis.cjs',
+    'embeddings:build': 'node scripts/build-embeddings.cjs',
+    'embeddings:drift': 'node scripts/topic-drift.cjs',
+    'content:refresh': 'node scripts/refresh-articles.cjs --dry-run',
     'pipeline:full': 'npm run pipeline:full',
   };
   

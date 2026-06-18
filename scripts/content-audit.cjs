@@ -34,8 +34,8 @@ if (fs.existsSync(envPath)) {
 }
 
 const CONFIG = {
-  ahrefsProject: 'ridethetide-site',
-  gscSite: process.env.GSC_SITE_URL || 'https://blog.ridethetide.site/',
+  ahrefsProject: 'peptide-south-africa-site',
+  gscSite: process.env.GSC_SITE_URL || 'https://peptide-south-africa.com/blog/',
   decayThreshold: -20,
   rankingDropThreshold: 5,
   contentDir: path.join(__dirname, '../src/content/blog'),
@@ -381,7 +381,7 @@ function generatePriorityActions(report) {
   if (gsc.status === 'site_not_verified' || gsc.status === 'missing_credentials') {
     actions.push({
       priority: 'P0-Critical',
-      action: 'Verify blog.ridethetide.site in GSC and update GSC_SITE_URL',
+      action: 'Verify peptide-south-africa.com/blog in GSC and update GSC_SITE_URL',
       impact: 'Unblocks all GSC-based audits',
       owner: 'SEO',
       due: daysFromNow(3),
@@ -495,7 +495,7 @@ function generatePriorityActions(report) {
 
   actions.push({
     priority: 'P3-Low',
-    action: 'Configure Cloudflare Pages custom domain (blog.ridethetide.site)',
+    action: 'Configure Cloudflare Pages custom domain (peptide-south-africa.com/blog)',
     impact: 'Professional appearance, brand consistency',
     owner: 'DevOps',
     due: daysFromNow(7),

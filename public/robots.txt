@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.peptide-south-africa.com/sitemap-index.xml

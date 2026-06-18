@@ -11,8 +11,8 @@ const path = require('path');
 
 const CONFIG = {
   sitemaps: [
-    'https://www.ridethetide.info/sitemap.xml',
-    'https://ridethetide.site/sitemap.xml',
+    'https://app.peptide-south-africa.com/sitemap.xml',
+    'https://peptide-south-africa.com/sitemap.xml',
   ],
   contentDir: path.join(__dirname, '../src/content/blog'),
   embeddingsDir: path.join(__dirname, '../content-os/embeddings'),

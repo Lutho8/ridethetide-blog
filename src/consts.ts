@@ -1,12 +1,12 @@
-// Site constants for Ride The Tide Research Blog
-export const SITE_TITLE = 'Ride The Tide Research — Peptide Science for South Africa';
+// Site constants for Peptide South Africa Research Blog
+export const SITE_TITLE = 'Peptide South Africa Research — Peptide Science for South Africa';
 export const SITE_DESCRIPTION = 'Evidence-based peptide research, protocols, and guides for the South African research community. Safety-first education on BPC-157, TB-500, CJC-1295, and 98+ compounds.';
-export const SITE_URL = 'https://blog.ridethetide.site';
-export const AUTHOR = 'Ride The Tide Research Team';
+export const SITE_URL = 'https://peptide-south-africa.com';
+export const AUTHOR = 'Peptide South Africa Research Team';
 export const AUTHOR_BIO = 'South Africa\'s peptide research community. We combine clinical evidence with practical protocols to help researchers make informed decisions.';
 export const SOCIAL = {
-	twitter: 'https://twitter.com/ridethetide',
-	instagram: 'https://instagram.com/ridethetide',
+	twitter: 'https://twitter.com/peptidesa',
+	instagram: 'https://instagram.com/peptidesa',
 };
 
 // Content categories

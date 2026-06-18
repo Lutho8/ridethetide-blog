@@ -8,7 +8,7 @@ categoryId: "south-africa"
 peptides: ""
 tags: "South Africa, sourcing, suppliers, Cape Town, Johannesburg, Durban, customs, import, quality, COA, peptides"
 featured: true
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "15 min read"
 heroImage: "/images/sa-sourcing-guide.svg"
 faqs:

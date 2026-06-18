@@ -16,7 +16,7 @@ const CONFIG = {
     'limitlesslife.nyc',
     'peptidewarehouse.com',
   ],
-  ourDomain: 'blog.ridethetide.site',
+  ourDomain: 'peptide-south-africa.com/blog',
   outputDir: path.join(__dirname, '../content-os/reports'),
   seedsDir: path.join(__dirname, '../content-os/seeds'),
 };

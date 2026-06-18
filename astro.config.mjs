@@ -5,7 +5,7 @@ import tailwind from '@astrojs/tailwind';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://blog.ridethetide.site',
+  site: 'https://www.peptide-south-africa.com',
   integrations: [
     mdx(),
     sitemap(),

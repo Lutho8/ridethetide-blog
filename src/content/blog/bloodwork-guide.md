@@ -8,7 +8,7 @@ categoryId: "safety-science"
 peptides: "CJC-1295, Ipamorelin, Semaglutide, BPC-157, TB-500"
 tags: "bloodwork, lab tests, monitoring, safety, IGF-1, glucose, HbA1c, lipids, South Africa, pathology"
 featured: true
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "14 min read"
 heroImage: "/images/bloodwork-guide.svg"
 faqs:

@@ -28,7 +28,7 @@ if (fs.existsSync(envPath)) {
 }
 
 const CONFIG = {
-  gscSite: process.env.GSC_SITE_URL || 'https://blog.ridethetide.site/',
+  gscSite: process.env.GSC_SITE_URL || 'https://peptide-south-africa.com/',
   defaultDays: 90,
   defaultThreshold: -20, // % decline to flag
   outputDir: path.join(__dirname, '../content-os/reports'),
@@ -254,7 +254,7 @@ function generateActions(decayingCount, improvingCount) {
 function generateTemplateReport(days, threshold) {
   return {
     generatedAt: new Date().toISOString(),
-    site: 'https://blog.ridethetide.site/',
+    site: 'https://peptide-south-africa.com/',
     days,
     threshold,
     status: 'template',

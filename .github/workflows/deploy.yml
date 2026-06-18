@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy Peptide South Africa Blog to Cloudflare Pages
 
 on:
   push:
@@ -49,6 +49,6 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ridethetide-blog
+          projectName: peptide-south-africa-blog
           directory: dist
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}

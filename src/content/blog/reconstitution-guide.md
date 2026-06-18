@@ -8,7 +8,7 @@ categoryId: "research-methods"
 peptides: "BPC-157, TB-500, CJC-1295, Ipamorelin"
 tags: "reconstitution, BAC water, dosing calculator, injection, storage"
 featured: true
-author: "Ride The Tide Research Team"
+author: "Peptide South Africa Research Team"
 readingTime: "8 min read"
 heroImage: "/images/reconstitution-guide.svg"
 faqs:

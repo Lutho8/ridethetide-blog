@@ -98,7 +98,7 @@ function prompt(question) {
 }
 
 async function runWizard() {
-  console.log('🔌 MCP Setup Wizard for Ride The Tide Content OS\n');
+  console.log('🔌 MCP Setup Wizard for Peptide South Africa Content OS\n');
   console.log('This wizard will help you connect all MCP servers.\n');
   
   // Check current .env
