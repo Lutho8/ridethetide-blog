@@ -1,11 +1,11 @@
 {
-  "name": "peptide-south-africa-blog",
+  "name": "own-the-room-lab",
   "type": "module",
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "astro build && node scripts/post-build-sitemap.cjs",
+    "build": "node build-own-room.cjs",
     "preview": "astro preview",
     "astro": "astro",
     "content:seed": "node scripts/seed-topics.cjs",
