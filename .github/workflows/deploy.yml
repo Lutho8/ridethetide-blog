@@ -1,54 +1,23 @@
-name: Deploy Peptide South Africa Blog to Cloudflare Pages
+name: Own the Room Lab CI
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: ridethetide-blog/package-lock.json
-
-      - name: Install dependencies
-        working-directory: ./ridethetide-blog
-        run: npm ci
-
-      - name: Build site
-        working-directory: ./ridethetide-blog
-        run: npm run build
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./ridethetide-blog/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: cloudflare-pages
-      url: ${{ steps.deploy.outputs.url }}
-    steps:
-      - name: Deploy to Cloudflare Pages
-        id: deploy
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: peptide-south-africa-blog
-          directory: dist
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          node-version: "20"
+      - name: Build static dashboard
+        run: node build-own-room.cjs
+      - name: Verify output
+        run: |
+          test -s dist/index.html
+          grep -q "Own the Room Lab" dist/index.html
